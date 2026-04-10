@@ -20,11 +20,13 @@ services:
 
   - type: web
     name: zedu-frontend
-    env: static
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
     region: oregon
     plan: free
-    staticPublishPath: .
-    buildCommand: echo "No build needed"
+    envVars:
+      - key: BACKEND_URL
+        value: https://zedu-backend.onrender.com/api
 
 databases:
   - name: zedu-db
