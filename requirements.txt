@@ -1,14 +1,11 @@
 Flask==2.3.2
-Flask-SQLAlchemy==3.0.5
-Flask-Migrate==4.0.4
+Flask-SQLAlchemy==2.5.1
 Flask-JWT-Extended==4.4.4
 Flask-CORS==4.0.0
 Flask-Bcrypt==1.0.1
 python-dotenv==1.0.0
 psycopg2-binary==2.9.6
-SQLAlchemy==2.0.19
-marshmallow==3.19.0
-marshmallow-sqlalchemy==0.29.0
+SQLAlchemy==1.4.52
 requests==2.31.0
 PyJWT==2.8.0
 Werkzeug==2.3.7
