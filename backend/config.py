@@ -45,6 +45,13 @@ class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     TESTING = False
+    # Disable SQLALCHEMY modification tracking in production
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Allow remote database connections
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+    }
 
 
 config = {

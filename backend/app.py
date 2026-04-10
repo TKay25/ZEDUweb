@@ -13,12 +13,27 @@ def create_app(config_name="development"):
     # Load configuration
     app.config.from_object(config[config_name])
     
+    # Configure CORS for production
+    if config_name == "production":
+        CORS(app, resources={
+            r"/api/*": {
+                "origins": [
+                    "https://zedu-frontend.onrender.com",
+                    "https://zedu.com",
+                    "https://www.zedu.com"
+                ],
+                "allow_headers": ["Content-Type", "Authorization"],
+                "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+            }
+        })
+    else:
+        CORS(app)
+    
     # Initialize extensions
     db.init_app(app)
     bcrypt.init_app(app)
     migrate = Migrate(app, db)
     jwt = JWTManager(app)
-    CORS(app)
     
     # Register blueprints
     from routes.auth import auth_bp
