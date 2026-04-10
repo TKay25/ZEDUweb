@@ -1,0 +1,865 @@
+/* ==============================================
+   ZEDU PLATFORM - MAIN STYLESHEET
+   ============================================== */
+
+/* Import Tailwind */
+@import './tailwind.css';
+
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+/* ==============================================
+   CUSTOM FONTS
+   ============================================== */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-var.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-italic.woff2') format('woff2');
+}
+
+/* ==============================================
+   GLOBAL STYLES
+   ============================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ==============================================
+   TYPOGRAPHY
+   ============================================== */
+
+h1 {
+  @apply text-4xl font-bold tracking-tight;
+}
+
+h2 {
+  @apply text-3xl font-semibold tracking-tight;
+}
+
+h3 {
+  @apply text-2xl font-semibold;
+}
+
+h4 {
+  @apply text-xl font-semibold;
+}
+
+h5 {
+  @apply text-lg font-semibold;
+}
+
+h6 {
+  @apply text-base font-semibold;
+}
+
+p {
+  @apply mb-4;
+}
+
+a {
+  @apply text-primary-600 hover:text-primary-700 transition-colors duration-200;
+}
+
+.dark a {
+  @apply text-primary-400 hover:text-primary-300;
+}
+
+/* ==============================================
+   LAYOUT
+   ============================================== */
+
+.container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.section {
+  @apply py-12 md:py-16 lg:py-20;
+}
+
+/* ==============================================
+   FORM ELEMENTS
+   ============================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+select,
+textarea {
+  @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm;
+}
+
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="tel"],
+.dark input[type="url"],
+.dark input[type="search"],
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark input[type="month"],
+.dark input[type="week"],
+.dark input[type="time"],
+.dark select,
+.dark textarea {
+  @apply bg-gray-800 border-gray-700 text-white;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  @apply rounded border-gray-300 text-primary-600 focus:ring-primary-500;
+}
+
+.dark input[type="checkbox"],
+.dark input[type="radio"] {
+  @apply bg-gray-800 border-gray-700;
+}
+
+/* ==============================================
+   TABLE STYLES
+   ============================================== */
+
+.table-container {
+  @apply overflow-x-auto rounded-lg border border-gray-200 shadow-sm;
+}
+
+.dark .table-container {
+  @apply border-gray-700;
+}
+
+/* ==============================================
+   CARD STYLES
+   ============================================== */
+
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* ==============================================
+   ANIMATIONS
+   ============================================== */
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Animation classes */
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.animate-slide-in-down {
+  animation: slideInDown 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-rotate {
+  animation: rotate 1s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce 2s infinite;
+}
+
+/* Shimmer effect for loading states */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* ==============================================
+   CUSTOM SCROLLBAR
+   ============================================== */
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) rgba(243, 244, 246, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(243, 244, 246, 0.5);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.8);
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: rgba(75, 85, 99, 0.5) rgba(31, 41, 55, 0.5);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.8);
+}
+
+/* ==============================================
+   UTILITY CLASSES
+   ============================================== */
+
+/* Text gradients */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-success {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Background gradients */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.bg-gradient-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.bg-gradient-error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .glass {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Image overlay */
+.image-overlay {
+  position: relative;
+}
+
+.image-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  pointer-events: none;
+}
+
+/* Zebra striping */
+.zebra-stripe > *:nth-child(even) {
+  @apply bg-gray-50;
+}
+
+.dark .zebra-stripe > *:nth-child(even) {
+  @apply bg-gray-800;
+}
+
+/* ==============================================
+   RESPONSIVE UTILITIES
+   ============================================== */
+
+/* Hide on mobile */
+@media (max-width: 640px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Hide on tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* Hide on desktop */
+@media (min-width: 1025px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ==============================================
+   PRINT STYLES
+   ============================================== */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666;
+  }
+
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+
+  img, table, figure {
+    page-break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+}
+
+/* ==============================================
+   DARK MODE ADJUSTMENTS
+   ============================================== */
+
+.dark .invert-on-dark {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* ==============================================
+   RTL SUPPORT
+   ============================================== */
+
+[dir="rtl"] .flip-on-rtl {
+  transform: scaleX(-1);
+}
+
+/* ==============================================
+   ACCESSIBILITY
+   ============================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary-500: #0000ff;
+    --color-success-500: #008000;
+    --color-warning-500: #ffa500;
+    --color-error-500: #ff0000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus outline */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.dark *:focus-visible {
+  outline-color: #60a5fa;
+}
+
+/* Skip to content link */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 10000;
+  transition: top 0.2s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* ==============================================
+   ZIMBABWE FLAG COLORS
+   ============================================== */
+
+.bg-zim-green {
+  background-color: #006400;
+}
+
+.bg-zim-yellow {
+  background-color: #ffd200;
+}
+
+.bg-zim-red {
+  background-color: #d40000;
+}
+
+.bg-zim-black {
+  background-color: #000000;
+}
+
+.text-zim-green {
+  color: #006400;
+}
+
+.text-zim-yellow {
+  color: #ffd200;
+}
+
+.text-zim-red {
+  color: #d40000;
+}
+
+.text-zim-black {
+  color: #000000;
+}
+
+.border-zim-green {
+  border-color: #006400;
+}
+
+.border-zim-yellow {
+  border-color: #ffd200;
+}
+
+.border-zim-red {
+  border-color: #d40000;
+}
+
+.border-zim-black {
+  border-color: #000000;
+}
+
+/* ==============================================
+   ZIMBABWEAN STYLE ELEMENTS
+   ============================================== */
+
+.zim-flag-strip {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #006400 0%,
+    #006400 25%,
+    #ffd200 25%,
+    #ffd200 50%,
+    #d40000 50%,
+    #d40000 75%,
+    #000000 75%,
+    #000000 100%
+  );
+}
+
+.zim-bird {
+  background-image: url('/images/zim-bird.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* ==============================================
+   CUSTOM COMPONENT STYLES
+   ============================================== */
+
+/* Dashboard widgets */
+.dashboard-widget {
+  @apply bg-white rounded-lg shadow-sm p-6 transition-all duration-300 hover:shadow-md;
+}
+
+.dark .dashboard-widget {
+  @apply bg-gray-800;
+}
+
+/* Notification badge */
+.notification-badge {
+  @apply absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center;
+}
+
+/* Progress steps */
+.progress-step {
+  @apply flex items-center;
+}
+
+.progress-step-indicator {
+  @apply w-8 h-8 rounded-full border-2 flex items-center justify-center font-medium;
+}
+
+.progress-step-active .progress-step-indicator {
+  @apply border-primary-600 bg-primary-600 text-white;
+}
+
+.progress-step-completed .progress-step-indicator {
+  @apply border-success-600 bg-success-600 text-white;
+}
+
+.progress-step-pending .progress-step-indicator {
+  @apply border-gray-300 bg-white text-gray-500;
+}
+
+.dark .progress-step-pending .progress-step-indicator {
+  @apply border-gray-600 bg-gray-800 text-gray-400;
+}
+
+/* File upload preview */
+.file-preview {
+  @apply relative inline-block;
+}
+
+.file-preview-remove {
+  @apply absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs cursor-pointer hover:bg-red-600 transition-colors;
+}
+
+/* Rich text editor */
+.rich-text-editor {
+  @apply border border-gray-300 rounded-lg overflow-hidden;
+}
+
+.dark .rich-text-editor {
+  @apply border-gray-700;
+}
+
+.rich-text-editor-toolbar {
+  @apply bg-gray-50 border-b border-gray-300 p-2 flex flex-wrap gap-1;
+}
+
+.dark .rich-text-editor-toolbar {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.rich-text-editor-content {
+  @apply p-4 min-h-[200px] focus:outline-none;
+}
+
+.dark .rich-text-editor-content {
+  @apply bg-gray-800 text-white;
+}
+
+/* Code block */
+.code-block {
+  @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto font-mono text-sm;
+}
+
+/* Data visualization */
+.chart-tooltip {
+  @apply bg-white p-2 rounded-lg shadow-lg border border-gray-200 text-sm;
+}
+
+.dark .chart-tooltip {
+  @apply bg-gray-800 border-gray-700 text-gray-200;
+}
+
+/* Custom checkbox */
+.custom-checkbox {
+  @apply relative inline-flex items-center cursor-pointer;
+}
+
+.custom-checkbox input {
+  @apply sr-only;
+}
+
+.custom-checkbox-box {
+  @apply w-5 h-5 border-2 border-gray-300 rounded transition-colors;
+}
+
+.custom-checkbox input:checked + .custom-checkbox-box {
+  @apply bg-primary-600 border-primary-600;
+}
+
+.custom-checkbox-box::after {
+  content: '';
+  @apply hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3;
+}
+
+.custom-checkbox input:checked + .custom-checkbox-box::after {
+  @apply block bg-white;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+}
+
+/* Custom radio */
+.custom-radio {
+  @apply relative inline-flex items-center cursor-pointer;
+}
+
+.custom-radio input {
+  @apply sr-only;
+}
+
+.custom-radio-circle {
+  @apply w-5 h-5 border-2 border-gray-300 rounded-full transition-colors;
+}
+
+.custom-radio input:checked + .custom-radio-circle {
+  @apply border-primary-600;
+}
+
+.custom-radio-circle::after {
+  content: '';
+  @apply hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-primary-600 rounded-full;
+}
+
+.custom-radio input:checked + .custom-radio-circle::after {
+  @apply block;
+}
+
+/* Toggle switch */
+.toggle-switch {
+  @apply relative inline-flex items-center cursor-pointer;
+}
+
+.toggle-switch input {
+  @apply sr-only;
+}
+
+.toggle-switch-track {
+  @apply w-10 h-6 bg-gray-300 rounded-full transition-colors;
+}
+
+.toggle-switch input:checked + .toggle-switch-track {
+  @apply bg-primary-600;
+}
+
+.toggle-switch-thumb {
+  @apply absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform;
+}
+
+.toggle-switch input:checked ~ .toggle-switch-thumb {
+  @apply transform translate-x-4;
+}
+
+.dark .toggle-switch-track {
+  @apply bg-gray-600;
+}
+
+.dark .toggle-switch-thumb {
+  @apply bg-gray-300;
+}

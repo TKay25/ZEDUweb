@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEDU API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .version {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #1e40af;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        h3 {
+            color: #374151;
+            margin: 20px 0 10px;
+        }
+
+        .endpoint {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        .get { background: #dbeafe; color: #1e40af; }
+        .post { background: #dcfce7; color: #166534; }
+        .put { background: #fef9c3; color: #854d0e; }
+        .patch { background: #fef9c3; color: #854d0e; }
+        .delete { background: #fee2e2; color: #991b1b; }
+
+        .path {
+            font-family: monospace;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .description {
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th {
+            background: #f3f4f6;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            margin: 15px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .badge.auth { background: #fef3c7; color: #92400e; }
+        .badge.admin { background: #fee2e2; color: #991b1b; }
+        .badge.public { background: #d1fae5; color: #065f46; }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        .status-codes {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .status-code {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .code { font-weight: bold; color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>ZEDU API Documentation</h1>
+            <p>Zimbabwe Educational Platform - REST API</p>
+            <span class="version">v1.0.0</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>📋 Overview</h2>
+            <p>Base URL: <code>https://api.zedu.co.zw/api/v1</code></p>
+            <p>All API requests require authentication unless marked as public. Include your JWT token in the Authorization header:</p>
+            <pre>Authorization: Bearer &lt;your_jwt_token&gt;</pre>
+        </div>
+
+        <div class="section">
+            <h2>🔐 Authentication Endpoints</h2>
+            
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/auth/register</span>
+                <span class="badge public">Public</span>
+                <p class="description">Register a new user</p>
+                
+                <h4>Request Body:</h4>
+                <pre>{
+    "email": "user@example.com",
+    "password": "SecurePass123!",
+    "firstName": "John",
+    "lastName": "Doe",
+    "role": "student",
+    "phone": "+263771234567"
+}</pre>
+                
+                <h4>Response:</h4>
+                <pre>{
+    "status": "success",
+    "message": "Registration successful",
+    "data": {
+        "user": {
+            "id": "507f1f77bcf86cd799439011",
+            "email": "user@example.com",
+            "firstName": "John",
+            "lastName": "Doe",
+            "role": "student"
+        }
+    }
+}</pre>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/auth/login</span>
+                <span class="badge public">Public</span>
+                <p class="description">Login with email and password</p>
+                
+                <h4>Request Body:</h4>
+                <pre>{
+    "email": "user@example.com",
+    "password": "SecurePass123!",
+    "rememberMe": true
+}</pre>
+                
+                <h4>Response:</h4>
+                <pre>{
+    "status": "success",
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
+    "data": {
+        "user": {
+            "id": "507f1f77bcf86cd799439011",
+            "email": "user@example.com",
+            "firstName": "John",
+            "lastName": "Doe",
+            "role": "student"
+        }
+    }
+}</pre>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/auth/logout</span>
+                <span class="badge auth">Auth Required</span>
+                <p class="description">Logout current user</p>
+                
+                <h4>Headers:</h4>
+                <pre>Authorization: Bearer &lt;token&gt;</pre>
+                
+                <h4>Response:</h4>
+                <pre>{
+    "status": "success",
+    "message": "Logged out successfully"
+}</pre>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👥 Student Endpoints</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/students/dashboard</span>
+                <span class="badge auth">Auth Required</span>
+                <p class="description">Get student dashboard overview</p>
+                
+                <h4>Response:</h4>
+                <pre>{
+    "status": "success",
+    "data": {
+        "profile": {
+            "name": "John Doe",
+            "studentNumber": "STU2024001",
+            "grade": "Form 4"
+        },
+        "stats": {
+            "coursesEnrolled": 5,
+            "assignmentsPending": 3,
+            "averageGrade": 85.5,
+            "attendanceRate": 92.3
+        },
+        "enrolledCourses": [...],
+        "upcomingAssignments": [...]
+    }
+}</pre>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/students/courses</span>
+                <span class="badge auth">Auth Required</span>
+                <p class="description">Get enrolled courses</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>👨‍🏫 Tutor Endpoints</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/tutors/dashboard</span>
+                <span class="badge auth">Auth Required</span>
+                <p class="description">Get tutor dashboard</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/tutors/courses</span>
+                <span class="badge auth">Auth Required</span>
+                <p class="description">Get tutor's courses</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 Course Endpoints</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/courses</span>
+                <span class="badge public">Public</span>
+                <p class="description">Get all published courses (with pagination)</p>
+                
+                <h4>Query Parameters:</h4>
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>page</td>
+                        <td>number</td>
+                        <td>Page number (default: 1)</td>
+                    </tr>
+                    <tr>
+                        <td>limit</td>
+                        <td>number</td>
+                        <td>Items per page (default: 10)</td>
+                    </tr>
+                    <tr>
+                        <td>subject</td>
+                        <td>string</td>
+                        <td>Filter by subject</td>
+                    </tr>
+                    <tr>
+                        <td>level</td>
+                        <td>string</td>
+                        <td>Filter by level (beginner/intermediate/advanced)</td>
+                    </tr>
+                    <tr>
+                        <td>minPrice</td>
+                        <td>number</td>
+                        <td>Minimum price</td>
+                    </tr>
+                    <tr>
+                        <td>maxPrice</td>
+                        <td>number</td>
+                        <td>Maximum price</td>
+                    </tr>
+                    <tr>
+                        <td>search</td>
+                        <td>string</td>
+                        <td>Search in title and description</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Status Codes</h2>
+            <div class="status-codes">
+                <div class="status-code">
+                    <div class="code">200</div>
+                    <div>OK - Success</div>
+                </div>
+                <div class="status-code">
+                    <div class="code">201</div>
+                    <div>Created - Resource created</div>
+                </div>
+                <div class="status-code">
+                    <div class="code">400</div>
+                    <div>Bad Request - Invalid input</div>
+                </div>
+                <div class="status-code">
+                    <div class="code">401</div>
+                    <div>Unauthorized - Authentication required</div>
+                </div>
+                <div class="status-code">
+                    <div class="code">403</div>
+                    <div>Forbidden - Insufficient permissions</div>
+                </div>
+                <div class="status-code">
+                    <div class="code">404</div>
+                    <div>Not Found - Resource not found</div>
+                </div>
+                <div class="status-code">
+                    <div class="code">429</div>
+                    <div>Too Many Requests - Rate limit exceeded</div>
+                </div>
+                <div class="status-code">
+                    <div class="code">500</div>
+                    <div>Internal Server Error</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Rate Limiting</h2>
+            <p>API requests are limited to 100 requests per 15 minutes per IP address. Rate limit headers are included in responses:</p>
+            <pre>X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1625097600</pre>
+        </div>
+
+        <div class="section">
+            <h2>📝 Error Handling</h2>
+            <p>All errors follow a consistent format:</p>
+            <pre>{
+    "status": "error",
+    "message": "Error description",
+    "errors": [
+        {
+            "field": "email",
+            "message": "Email is required"
+        }
+    ],
+    "timestamp": "2024-01-01T12:00:00.000Z"
+}</pre>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 ZEDU Platform. All rights reserved.</p>
+            <p>Support: <a href="mailto:support@zedu.co.zw">support@zedu.co.zw</a></p>
+        </footer>
+    </div>
+</body>
+</html>
