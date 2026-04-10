@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, Tutor, User
+from ..models import db, Tutor, User
 
 tutors_bp = Blueprint("tutors", __name__)
 
@@ -125,7 +125,7 @@ def update_tutor(tutor_id):
 @tutors_bp.route("/<tutor_id>/courses", methods=["GET"])
 def get_tutor_courses(tutor_id):
     """Get tutor's courses"""
-    from models import Course
+    from ..models import Course
     
     tutor = Tutor.query.get(tutor_id)
     if not tutor:

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, Student, User
+from ..models import db, Student, User
 import uuid
 
 students_bp = Blueprint("students", __name__)
@@ -82,7 +82,7 @@ def update_student(student_id):
 @students_bp.route("/<student_id>/courses", methods=["GET"])
 def get_student_courses(student_id):
     """Get student's enrolled courses"""
-    from models import CourseEnrollment, Course
+    from ..models import CourseEnrollment, Course
     
     student = Student.query.get(student_id)
     if not student:
@@ -107,7 +107,7 @@ def get_student_courses(student_id):
 @students_bp.route("/<student_id>/performance", methods=["GET"])
 def get_student_performance(student_id):
     """Get student performance metrics"""
-    from models import Assessment
+    from ..models import Assessment
     
     student = Student.query.get(student_id)
     if not student:

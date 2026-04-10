@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, Course, CourseEnrollment, Lesson, Tutor
+from ..models import db, Course, CourseEnrollment, Lesson, Tutor
 from uuid import uuid4
 
 courses_bp = Blueprint("courses", __name__)
@@ -116,7 +116,7 @@ def create_course():
 @jwt_required()
 def enroll_course(course_id):
     """Enroll student in course"""
-    from models import Student
+    from ..models import Student
     
     current_user_id = get_jwt_identity()
     student = Student.query.filter_by(user_id=current_user_id).first()

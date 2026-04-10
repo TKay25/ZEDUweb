@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from config import config
-from models import db, bcrypt
+from .config import config
+from .models import db, bcrypt
 
 
 def create_app(config_name="development"):
@@ -34,15 +34,15 @@ def create_app(config_name="development"):
     jwt = JWTManager(app)
     
     # Register blueprints
-    from routes.auth import auth_bp
-    from routes.users import users_bp
-    from routes.students import students_bp
-    from routes.tutors import tutors_bp
-    from routes.courses import courses_bp
-    from routes.sessions import sessions_bp
-    from routes.assessments import assessments_bp
-    from routes.messages import messages_bp
-    from routes.ai import ai_bp
+    from .routes.auth import auth_bp
+    from .routes.users import users_bp
+    from .routes.students import students_bp
+    from .routes.tutors import tutors_bp
+    from .routes.courses import courses_bp
+    from .routes.sessions import sessions_bp
+    from .routes.assessments import assessments_bp
+    from .routes.messages import messages_bp
+    from .routes.ai import ai_bp
     
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(users_bp, url_prefix="/api/users")

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, AIPrediction, Student
+from ..models import db, AIPrediction, Student
 import json
 
 ai_bp = Blueprint("ai", __name__)
@@ -11,7 +11,7 @@ ai_bp = Blueprint("ai", __name__)
 def performance_predictor():
     """Predict student performance"""
     current_user_id = get_jwt_identity()
-    from models import Student
+    from ..models import Student
     
     student = Student.query.filter_by(user_id=current_user_id).first()
     if not student:
@@ -108,7 +108,7 @@ def summary_generator():
 def recommendation_card():
     """Get personalized recommendations"""
     current_user_id = get_jwt_identity()
-    from models import Student
+    from ..models import Student
     
     student = Student.query.filter_by(user_id=current_user_id).first()
     if not student:
