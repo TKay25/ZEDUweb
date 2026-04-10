@@ -75,15 +75,19 @@ def create_app(config_name='development'):
     def health_check():
         return {"status": "ok", "message": "ZEDU API is running"}, 200
     
-    # Create database tables
-    with app.app_context():
-        db.create_all()
+    # Register database initialization on first request (deferred to avoid import-time errors)
+    @app.before_request
+    def init_db():
+        try:
+            with app.app_context():
+                db.create_all()
+        except Exception as e:
+            print(f"Warning: Could not initialize database: {e}")
     
     return app
 
 
-# Create app instance for direct execution
-zedu_app = create_app(os.getenv('FLASK_ENV', 'development'))
-
 if __name__ == "__main__":
+    # Only create app for direct execution
+    zedu_app = create_app(os.getenv('FLASK_ENV', 'development'))
     zedu_app.run(debug=True)

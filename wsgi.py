@@ -1,12 +1,15 @@
 """
 WSGI entry point for Gunicorn
 """
-from zedu import create_app, db
+import os
+from dotenv import load_dotenv
 
-app = create_app('production')
+# Load environment variables early
+load_dotenv()
 
-# Ensure database is initialized
-with app.app_context():
-    db.create_all()
+from zedu import create_app
+
+# Create app instance - database initialization deferred to first request
+app = create_app(os.getenv('FLASK_ENV', 'production'))
 
 
