@@ -1,2 +1,2 @@
-web: gunicorn -w 4 -b 0.0.0.0:$PORT --timeout 120 wsgi:app
-release: flask db upgrade
+web: cd /opt/render/project/src/backend && gunicorn -w 4 -b 0.0.0.0:$PORT --timeout 120 wsgi:app
+release: cd /opt/render/project/src/backend && flask db upgrade
