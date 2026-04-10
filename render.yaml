@@ -2,7 +2,6 @@ services:
   - type: web
     name: zedu-backend
     env: python
-    pythonVersion: 3.12
     region: oregon
     plan: free
     buildCommand: pip install -r backend/requirements.txt
