@@ -25,7 +25,8 @@ class Config:
     
     # CORS
     CORS_HEADERS = "Content-Type"
-    CORS_RESOURCES = {r"/api/*": {"origins": ["http://localhost:3000", "http://localhost:5000"]}}
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    CORS_RESOURCES = {r"/api/*": {"origins": [FRONTEND_URL, "http://localhost:3000", "http://localhost:5000"]}}
 
 
 class DevelopmentConfig(Config):
