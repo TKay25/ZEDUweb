@@ -1,5 +1,22 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:5000/api';
+const getApiBaseUrl = () => {
+  // Production (Render or custom domain)
+  if (window.location.hostname.includes('onrender.com') || 
+      window.location.hostname.includes('zedu.com')) {
+    return 'https://zedu-backend.onrender.com/api';
+  }
+  
+  // Development
+  if (window.location.hostname === 'localhost' || 
+      window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:5000/api';
+  }
+  
+  // Use same origin if API is on same domain
+  return '/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // API Client
 class APIClient {
