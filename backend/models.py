@@ -2,6 +2,7 @@ from datetime import datetime
 import uuid
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from sqlalchemy.dialects.postgresql import UUID
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -10,7 +11,7 @@ bcrypt = Bcrypt()
 class User(db.Model):
     __tablename__ = "users"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
@@ -55,10 +56,10 @@ class User(db.Model):
 class Student(db.Model):
     __tablename__ = "students"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = db.Column(db.String(36), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     grade_level = db.Column(db.String(50))
-    school_id = db.Column(db.String(36), db.ForeignKey("schools.id", ondelete="SET NULL"))
+    school_id = db.Column(UUID(as_uuid=True), db.ForeignKey("schools.id", ondelete="SET NULL"))
     gpa = db.Column(db.Float, default=0.0)
     total_study_hours = db.Column(db.Float, default=0.0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -74,8 +75,8 @@ class Student(db.Model):
 class Tutor(db.Model):
     __tablename__ = "tutors"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = db.Column(db.String(36), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     specializations = db.Column(db.JSON)  # array of subjects
     experience_years = db.Column(db.Integer, default=0)
     hourly_rate = db.Column(db.Float)
@@ -93,8 +94,8 @@ class Tutor(db.Model):
 class Parent(db.Model):
     __tablename__ = "parents"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = db.Column(db.String(36), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     relationship = db.Column(db.String(100))
     student_ids = db.Column(db.JSON)  # array of student IDs
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -103,7 +104,7 @@ class Parent(db.Model):
 class School(db.Model):
     __tablename__ = "schools"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(20))
@@ -118,8 +119,8 @@ class School(db.Model):
 class Course(db.Model):
     __tablename__ = "courses"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    tutor_id = db.Column(db.String(36), db.ForeignKey("tutors.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tutor_id = db.Column(UUID(as_uuid=True), db.ForeignKey("tutors.id", ondelete="CASCADE"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     subject = db.Column(db.String(100), nullable=False)
@@ -137,9 +138,9 @@ class Course(db.Model):
 class CourseEnrollment(db.Model):
     __tablename__ = "course_enrollments"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    student_id = db.Column(db.String(36), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
-    course_id = db.Column(db.String(36), db.ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    student_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
+    course_id = db.Column(UUID(as_uuid=True), db.ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
     progress = db.Column(db.Float, default=0.0)
     status = db.Column(db.String(50), default="active")  # active, completed, paused
     enrolled_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -149,8 +150,8 @@ class CourseEnrollment(db.Model):
 class Lesson(db.Model):
     __tablename__ = "lessons"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    course_id = db.Column(db.String(36), db.ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    course_id = db.Column(UUID(as_uuid=True), db.ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     content = db.Column(db.Text)
@@ -162,9 +163,9 @@ class Lesson(db.Model):
 class TutorSession(db.Model):
     __tablename__ = "tutor_sessions"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    tutor_id = db.Column(db.String(36), db.ForeignKey("tutors.id", ondelete="CASCADE"), nullable=False)
-    student_id = db.Column(db.String(36), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tutor_id = db.Column(UUID(as_uuid=True), db.ForeignKey("tutors.id", ondelete="CASCADE"), nullable=False)
+    student_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
     scheduled_at = db.Column(db.DateTime, nullable=False)
     duration_minutes = db.Column(db.Integer, default=60)
     status = db.Column(db.String(50), default="scheduled")  # scheduled, ongoing, completed, cancelled
@@ -176,8 +177,8 @@ class TutorSession(db.Model):
 class Assessment(db.Model):
     __tablename__ = "assessments"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    student_id = db.Column(db.String(36), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    student_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     subject = db.Column(db.String(100))
     score = db.Column(db.Float)
@@ -190,9 +191,9 @@ class Assessment(db.Model):
 class Message(db.Model):
     __tablename__ = "messages"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    sender_id = db.Column(db.String(36), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    recipient_id = db.Column(db.String(36), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    sender_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    recipient_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     content = db.Column(db.Text, nullable=False)
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -203,8 +204,8 @@ class Message(db.Model):
 class Notification(db.Model):
     __tablename__ = "notifications"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = db.Column(db.String(36), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text)
     type = db.Column(db.String(50))  # info, warning, error, success
@@ -215,8 +216,8 @@ class Notification(db.Model):
 class AIPrediction(db.Model):
     __tablename__ = "ai_predictions"
     
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    student_id = db.Column(db.String(36), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    student_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
     prediction_type = db.Column(db.String(100))  # performance, quiz, summary, recommendation
     data = db.Column(db.JSON)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
