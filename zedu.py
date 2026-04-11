@@ -70,24 +70,6 @@ def create_app(config_name='development'):
     def internal_error(error):
         return {"message": "Internal server error"}, 500
     
-    # Root endpoint
-    @app.route("/", methods=["GET"])
-    def root():
-        return {
-            "message": "ZEDU Educational Platform API",
-            "version": "1.0.0",
-            "status": "running",
-            "endpoints": {
-                "health": "/api/health",
-                "auth": "/api/auth/register, /api/auth/login",
-                "users": "/api/users",
-                "students": "/api/students",
-                "tutors": "/api/tutors",
-                "courses": "/api/courses",
-                "documentation": "See GitHub README.md"
-            }
-        }, 200
-    
     # Health check endpoint
     @app.route("/api/health", methods=["GET"])
     def health_check():
