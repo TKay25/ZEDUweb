@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
-from models import db, User
+from models import db, User, Tutor, Student, Parent
 from datetime import datetime
 
 auth_bp = Blueprint("auth", __name__)
@@ -51,7 +51,44 @@ def register():
         user.set_password(password)
         
         db.session.add(user)
+        db.session.flush()  # Flush to get the user ID before creating role record
+        
+        # Create role-specific record
+        if user_type == "tutor":
+            tutor = Tutor(
+                user_id=user.id,
+                specializations=data.get("specializations", []),
+                experience_years=data.get("experience_years", 0),
+                hourly_rate=data.get("hourly_rate", 0.0)
+            )
+            db.session.add(tutor)
+        elif user_type == "student":
+            student = Student(
+                user_id=user.id,
+                grade_level=data.get("grade_level"),
+                school_id=data.get("school_id")
+            )
+            db.session.add(student)
+        elif user_type == "parent":
+            parent = Parent(
+                user_id=user.id,
+                relationship=data.get("relationship", "Parent"),
+                student_ids=data.get("student_ids", [])
+            )
+            db.session.add(parent)
+        
         db.session.commit()
+        
+        return {
+            "message": "User registered successfully",
+            "user": user.to_dict(),
+            "redirect_dashboard": f"/{user_type}/dashboard" if user_type in ["student", "tutor", "parent"] else "/dashboard"
+        }, 201
+    except Exception as e:
+        db.session.rollback()
+        import traceback
+        traceback.print_exc()
+        return {"message": f"Registration failed: {str(e)}"}, 500
         
         return {
             "message": "User registered successfully",

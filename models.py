@@ -88,6 +88,19 @@ class Tutor(db.Model):
     
     courses = db.relationship("Course", backref="tutor", cascade="all, delete-orphan")
     sessions = db.relationship("TutorSession", backref="tutor", cascade="all, delete-orphan")
+    
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "user_id": str(self.user_id),
+            "specializations": self.specializations,
+            "experience_years": self.experience_years,
+            "hourly_rate": self.hourly_rate,
+            "rating": self.rating,
+            "total_sessions": self.total_sessions,
+            "is_available": self.is_available,
+            "created_at": self.created_at.isoformat()
+        }
 
 
 class Parent(db.Model):

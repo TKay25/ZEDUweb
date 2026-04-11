@@ -20,33 +20,41 @@ def get_tutors():
 def get_dashboard_stats(tutor_id):
     """Get tutor dashboard statistics"""
     try:
+        # Try to find tutor by ID
         tutor = Tutor.query.filter_by(id=tutor_id).first()
+        
         if not tutor:
-            return {"message": "Tutor not found"}, 404
+            # Try to find by user_id (in case tutor_id is actually user_id)
+            user = User.query.filter_by(id=tutor_id).first()
+            if user and user.user_type.lower() == 'tutor':
+                tutor = Tutor.query.filter_by(user_id=tutor_id).first()
+            
+            if not tutor:
+                return {"message": f"Tutor not found for ID: {tutor_id}"}, 404
         
         # Total students (count unique students in enrollments)
         total_students = db.session.query(func.count(func.distinct(CourseEnrollment.student_id))).filter(
-            Course.tutor_id == tutor_id,
+            Course.tutor_id == tutor.id,
             CourseEnrollment.course_id == Course.id
         ).scalar() or 0
         
         # Active courses
-        active_courses = Course.query.filter_by(tutor_id=tutor_id).count()
+        active_courses = Course.query.filter_by(tutor_id=tutor.id).count()
         
         # Total earnings (completed and pending)
         total_earnings = db.session.query(func.sum(TutorEarnings.amount)).filter(
-            TutorEarnings.tutor_id == tutor_id
+            TutorEarnings.tutor_id == tutor.id
         ).scalar() or 0
         
         # Pending earnings
         pending_earnings = db.session.query(func.sum(TutorEarnings.amount)).filter(
-            TutorEarnings.tutor_id == tutor_id,
+            TutorEarnings.tutor_id == tutor.id,
             TutorEarnings.status == "pending"
         ).scalar() or 0
         
         # Average rating
         avg_rating = db.session.query(func.avg(CourseReview.rating)).filter(
-            Course.tutor_id == tutor_id,
+            Course.tutor_id == tutor.id,
             CourseReview.course_id == Course.id
         ).scalar() or 0
         
@@ -54,13 +62,13 @@ def get_dashboard_stats(tutor_id):
         
         # Total reviews
         total_reviews = db.session.query(func.count(CourseReview.id)).filter(
-            Course.tutor_id == tutor_id,
+            Course.tutor_id == tutor.id,
             CourseReview.course_id == Course.id
         ).scalar() or 0
         
         # Completion rate (average from all courses)
         completion_rate = db.session.query(func.avg(CourseEnrollment.progress)).filter(
-            Course.tutor_id == tutor_id,
+            Course.tutor_id == tutor.id,
             CourseEnrollment.course_id == Course.id
         ).scalar() or 0
         
@@ -68,14 +76,14 @@ def get_dashboard_stats(tutor_id):
         
         # Upcoming sessions
         upcoming_sessions = TutorSession.query.filter(
-            TutorSession.tutor_id == tutor_id,
+            TutorSession.tutor_id == tutor.id,
             TutorSession.scheduled_at > datetime.utcnow(),
             TutorSession.status == "scheduled"
         ).count()
         
         # Pending grading (sessions completed but not graded)
         pending_grading = TutorSession.query.filter(
-            TutorSession.tutor_id == tutor_id,
+            TutorSession.tutor_id == tutor.id,
             TutorSession.status == "completed"
         ).count()
         
@@ -94,6 +102,8 @@ def get_dashboard_stats(tutor_id):
             }
         }, 200
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return {"message": f"Error fetching stats: {str(e)}"}, 500
 
 
