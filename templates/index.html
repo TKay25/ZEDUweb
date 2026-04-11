@@ -4,75 +4,315 @@
 
 {% block extra_css %}
 <style>
-    .hero { background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%); color: white; padding: 80px 0; }
-    .feature-card { border: 0; transition: transform 0.3s, box-shadow 0.3s; }
-    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-    .feature-icon { font-size: 3rem; margin-bottom: 15px; color: #0d6efd; }
-    .cta { background-color: #f8f9fa; padding: 60px 0; }
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, #0d6efd 0%, #0043b0 50%, #001f5c 100%);
+        color: white;
+        padding: 100px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(100px, -50px);
+    }
+    .hero::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        transform: translate(-100px, 50px);
+    }
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+    .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        letter-spacing: -1px;
+    }
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 40px;
+        opacity: 0.95;
+        font-weight: 300;
+    }
+    .hero .btn {
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-right: 15px;
+        margin-bottom: 10px;
+    }
+    .btn-light {
+        background: white;
+        color: #0d6efd;
+    }
+    .btn-light:hover {
+        background: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    .btn-outline-light {
+        border: 2px solid white;
+        color: white;
+    }
+    .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+    }
+    .hero-icon {
+        font-size: 150px;
+        opacity: 0.15;
+        position: absolute;
+        bottom: -30px;
+        right: -30px;
+    }
+
+    /* Features Section */
+    .features {
+        padding: 80px 0;
+        background: #f8f9fa;
+    }
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 60px;
+        text-align: center;
+        color: #1a1a1a;
+    }
+    .feature-card {
+        border: 0;
+        border-radius: 12px;
+        padding: 40px 30px;
+        transition: all 0.3s ease;
+        height: 100%;
+        background: white;
+        text-align: center;
+    }
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    .feature-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #0d6efd, #0043b0);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    .feature-card h5 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 20px 0;
+        color: #1a1a1a;
+    }
+    .feature-card p {
+        color: #666;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    /* Stats Section */
+    .stats {
+        padding: 60px 0;
+        background: white;
+    }
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #0d6efd;
+        display: block;
+    }
+    .stat-label {
+        color: #666;
+        font-size: 0.95rem;
+        margin-top: 5px;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #0d6efd 0%, #0043b0 100%);
+        color: white;
+        padding: 80px 0;
+        text-align: center;
+    }
+    .cta-section h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 30px;
+    }
+    .cta-section p {
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        opacity: 0.95;
+    }
+    .cta-section .btn {
+        padding: 15px 40px;
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+        .section-title {
+            font-size: 2rem;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero -->
+<!-- Hero Section -->
 <section class="hero">
-    <div class="container py-5">
+    <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Welcome to ZEDU</h1>
-                <p class="lead mb-4">Connect with expert tutors, access thousands of courses, and transform your learning journey.</p>
-                <div class="d-flex gap-3">
-                    <a href="/courses" class="btn btn-light btn-lg"><i class="fas fa-book me-2"></i>Browse Courses</a>
-                    <a href="/tutors" class="btn btn-outline-light btn-lg"><i class="fas fa-chalkboard-user me-2"></i>Find Tutors</a>
+            <div class="col-lg-6 hero-content">
+                <h1>Transform Your Learning Journey</h1>
+                <p class="hero-subtitle">Connect with expert tutors, master new skills, and achieve your educational goals on your own schedule.</p>
+                <div>
+                    <a href="/courses" class="btn btn-light btn-lg">
+                        <i class="fas fa-book me-2"></i>Explore Courses
+                    </a>
+                    <a href="/tutors" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-chalkboard-user me-2"></i>Find Tutors
+                    </a>
                 </div>
             </div>
-            <div class="col-lg-6 text-center">
-                <i class="fas fa-graduation-cap fa-10x" style="opacity:0.2;"></i>
+            <div class="col-lg-6 text-center position-relative">
+                <div class="hero-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div style="padding: 40px; background: rgba(255,255,255,0.1); border-radius: 16px; backdrop-filter: blur(10px);">
+                    <i class="fas fa-laptop fa-5x" style="color: rgba(255,255,255,0.3);"></i>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features -->
-<section class="py-5">
+<!-- Stats Section -->
+<section class="stats">
     <div class="container">
-        <h2 class="text-center mb-5">Why Choose ZEDU?</h2>
+        <div class="row">
+            <div class="col-md-4 stat-item">
+                <span class="stat-number">500+</span>
+                <span class="stat-label">Expert Tutors</span>
+            </div>
+            <div class="col-md-4 stat-item">
+                <span class="stat-number">2000+</span>
+                <span class="stat-label">Courses Available</span>
+            </div>
+            <div class="col-md-4 stat-item">
+                <span class="stat-number">50K+</span>
+                <span class="stat-label">Active Learners</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Why Choose ZEDU?</h2>
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card feature-card">
-                    <div class="card-body text-center">
-                        <div class="feature-icon"><i class="fas fa-book"></i></div>
-                        <h5 class="card-title">Thousands of Courses</h5>
-                        <p class="card-text">Access diverse courses taught by expert tutors across all subjects and skill levels.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
                     </div>
+                    <h5>Diverse Courses</h5>
+                    <p>Access thousands of courses across Mathematics, Science, Languages, and more—all taught by verified experts.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card feature-card">
-                    <div class="card-body text-center">
-                        <div class="feature-icon"><i class="fas fa-video"></i></div>
-                        <h5 class="card-title">Live Sessions</h5>
-                        <p class="card-text">Interactive video sessions with personalized tutoring to match your learning pace.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
                     </div>
+                    <h5>Live Tutoring</h5>
+                    <p>Get real-time help from tutors through interactive video sessions tailored to your learning pace and goals.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card feature-card">
-                    <div class="card-body text-center">
-                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
-                        <h5 class="card-title">AI-Powered</h5>
-                        <p class="card-text">Get personalized recommendations and learning predictions powered by AI.</p>
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
                     </div>
+                    <h5>AI-Powered Learning</h5>
+                    <p>Receive personalized recommendations and progress predictions powered by advanced AI technology.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Track Progress</h5>
+                    <p>Monitor your learning with detailed analytics, performance insights, and achievement milestones.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5>Community</h5>
+                    <p>Join thousands of students, share knowledge, collaborate on projects, and grow together.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h5>Learn Anytime</h5>
+                    <p>Study at your own pace with flexible scheduling—access courses and materials whenever you want.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- CTA -->
-<section class="cta">
+<!-- CTA Section -->
+<section class="cta-section">
     <div class="container text-center">
-        <h2 class="mb-4">Ready to Start Learning?</h2>
-        <a href="/register" class="btn btn-primary btn-lg"><i class="fas fa-rocket me-2"></i>Get Started</a>
+        <h2>Ready to Start Your Learning Journey?</h2>
+        <p>Join thousands of students who are already transforming their futures with ZEDU.</p>
+        <a href="/register" class="btn btn-light btn-lg">
+            <i class="fas fa-rocket me-2"></i>Get Started Now
+        </a>
     </div>
 </section>
 {% endblock %}
