@@ -348,8 +348,8 @@
             <!-- Dynamic stats based on user role -->
         </div>
         
-        <!-- Learning Progress Bar -->
-        <div class="progress-card">
+        <!-- Learning Progress Bar (Student Only) -->
+        <div class="progress-card" id="progressSection">
             <div class="progress-title">
                 <i class="fas fa-chart-line"></i> Overall Progress
             </div>
@@ -433,6 +433,11 @@ async function loadDashboard() {
         // Render role-specific quick actions
         renderQuickActions(userType);
         
+        // Render tutor-specific sections if tutor
+        if (userType === 'tutor') {
+            renderTutorCourses();
+        }
+        
     } catch (error) {
         console.error('Error loading dashboard:', error);
     }
@@ -450,10 +455,10 @@ function renderStatCards(userType) {
             { icon: 'fa-chart-pie', label: 'Learning Progress', value: 0, id: 'stat4', color: 'progress' }
         ],
         tutor: [
-            { icon: 'fa-users', label: 'My Students', value: 0, id: 'stat1', color: 'courses' },
-            { icon: 'fa-calendar', label: 'Pending Sessions', value: 0, id: 'stat2', color: 'sessions' },
-            { icon: 'fa-star', label: 'Rating', value: 0, id: 'stat3', color: 'tasks', suffix: '★' },
-            { icon: 'fa-dollar-sign', label: 'Total Earnings', value: 0, id: 'stat4', color: 'progress', prefix: '$' }
+            { icon: 'fa-users', label: 'Total Students', value: 1250, id: 'stat1', color: 'courses' },
+            { icon: 'fa-book', label: 'Active Courses', value: 4, id: 'stat2', color: 'sessions' },
+            { icon: 'fa-dollar-sign', label: 'Total Earnings', value: 12500, id: 'stat3', color: 'tasks', prefix: '$' },
+            { icon: 'fa-star', label: 'Average Rating', value: 4.8, id: 'stat4', color: 'progress', suffix: '/5' }
         ],
         parent: [
             { icon: 'fa-child', label: 'My Children', value: 0, id: 'stat1', color: 'courses' },
@@ -493,8 +498,8 @@ function renderQuickActions(userType) {
             { icon: 'fa-user-edit', label: 'Edit Profile', href: '/profile' }
         ],
         tutor: [
-            { icon: 'fa-calendar-plus', label: 'Create Session', href: '/sessions/new' },
-            { icon: 'fa-file-alt', label: 'View Feedback', href: '/feedback' },
+            { icon: 'fa-book-plus', label: 'Create Course', href: '/courses/new' },
+            { icon: 'fa-video', label: 'Start Session', href: '/sessions/new' },
             { icon: 'fa-user-edit', label: 'Edit Profile', href: '/profile' }
         ],
         parent: [
@@ -516,6 +521,103 @@ function renderQuickActions(userType) {
     });
     
     actionsGrid.innerHTML = actionsHTML;
+}
+
+// Add tutor-specific section renderer
+function renderTutorCourses() {
+    const dashboardContainer = document.querySelector('.dashboard-container');
+    if (!dashboardContainer) return;
+    
+    const tutorSection = document.createElement('div');
+    tutorSection.innerHTML = `
+        <div style="margin-top: 50px;">
+            <div class="section-title">
+                <i class="fas fa-fire"></i> Top Performing Courses
+            </div>
+            <div class="courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div class="course-card" style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #001f5c;">Advanced Mathematics</h3>
+                        <span style="color: #ffc107; font-size: 0.9rem;">⭐ 4.9</span>
+                    </div>
+                    <div style="display: flex; gap: 15px; color: #666; font-size: 0.8rem; margin-bottom: 10px;">
+                        <span><i class="fas fa-users"></i> 342 students</span>
+                        <span><i class="fas fa-chart-pie"></i> 85%</span>
+                    </div>
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #0066cc;">$5,120 earned</div>
+                </div>
+                
+                <div class="course-card" style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #001f5c;">Web Development Bootcamp</h3>
+                        <span style="color: #ffc107; font-size: 0.9rem;">⭐ 4.8</span>
+                    </div>
+                    <div style="display: flex; gap: 15px; color: #666; font-size: 0.8rem; margin-bottom: 10px;">
+                        <span><i class="fas fa-users"></i> 567 students</span>
+                        <span><i class="fas fa-chart-pie"></i> 72%</span>
+                    </div>
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #0066cc;">$6,800 earned</div>
+                </div>
+                
+                <div class="course-card" style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #001f5c;">Physics 101</h3>
+                        <span style="color: #ffc107; font-size: 0.9rem;">⭐ 4.7</span>
+                    </div>
+                    <div style="display: flex; gap: 15px; color: #666; font-size: 0.8rem; margin-bottom: 10px;">
+                        <span><i class="fas fa-users"></i> 341 students</span>
+                        <span><i class="fas fa-chart-pie"></i> 68%</span>
+                    </div>
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #0066cc;">$3,410 earned</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 50px;">
+            <div class="section-title">
+                <i class="fas fa-clock"></i> Recent Activity
+            </div>
+            <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
+                <div style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0066cc;">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: #001f5c; font-size: 0.9rem;">New Assignment Submission</div>
+                        <div style="font-size: 0.8rem; color: #666;">John Doe submitted "Calculus Assignment 3" • 2 hours ago</div>
+                    </div>
+                </div>
+                <div style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #4caf50;">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: #001f5c; font-size: 0.9rem;">New Student Enrollment</div>
+                        <div style="font-size: 0.8rem; color: #666;">Sarah Johnson enrolled in "Advanced Mathematics" • 5 hours ago</div>
+                    </div>
+                </div>
+                <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: #fff3e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ff9800;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: #001f5c; font-size: 0.9rem;">New 5-Star Review</div>
+                        <div style="font-size: 0.8rem; color: #666;">Emily Wilson left a review for "Web Development Bootcamp" • 2 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const progressSection = document.getElementById('progressSection');
+    if (progressSection) {
+        progressSection.style.display = 'none';
+    }
+    
+    const quickActionsSection = document.querySelector('.quick-actions-section');
+    if (quickActionsSection) {
+        quickActionsSection.parentNode.insertBefore(tutorSection, quickActionsSection.nextSibling);
+    }
 }
 </script>
 {% endblock %}
