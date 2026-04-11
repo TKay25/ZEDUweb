@@ -4,66 +4,421 @@
 
 {% block extra_css %}
 <style>
-    .stat-card { border: 0; border-left: 4px solid #0d6efd; }
-    .stat-value { font-size: 1.6rem; font-weight: 700; }
-    .quick-link { transition: all 0.3s; }
-    .quick-link:hover { transform: translateX(5px); }
+    :root {
+        --deep-blue: #001f5c;
+        --blue-dark: #003d9a;
+        --blue-accent: #0066cc;
+    }
+    
+    /* Page Background */
+    .dashboard-page {
+        background: linear-gradient(135deg, var(--deep-blue) 0%, var(--blue-dark) 50%, #1a1a2e 100%);
+        min-height: calc(100vh - 80px);
+        padding: 45px 18px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dashboard-page::before {
+        content: '';
+        position: fixed;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+    }
+    
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Header */
+    .dashboard-header {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 40px 30px;
+        color: white;
+        margin-bottom: 50px;
+        animation: slideDown 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+    }
+    
+    .dashboard-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        font-weight: 300;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 50px;
+    }
+    
+    .stat-card {
+        background: white;
+        border: none;
+        border-radius: 20px;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 20px 60px rgba(0, 31, 92, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 80px rgba(0, 31, 92, 0.4);
+    }
+    
+    .stat-card:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+    
+    .stat-card:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .stat-card:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+    
+    .stat-card:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+    
+    .stat-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        flex-shrink: 0;
+    }
+    
+    .stat-icon.courses {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .stat-icon.sessions {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+    
+    .stat-icon.tasks {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+    
+    .stat-icon.progress {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+    }
+    
+    .stat-content {
+        flex: 1;
+    }
+    
+    .stat-label {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+    
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--deep-blue);
+        line-height: 1;
+    }
+    
+    /* Learning Progress Card */
+    .progress-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0, 31, 92, 0.3);
+        margin-bottom: 50px;
+        animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .progress-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--deep-blue);
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .progress-title i {
+        color: var(--blue-accent);
+    }
+    
+    .progress-bar-container {
+        background: #e0e0e0;
+        border-radius: 15px;
+        height: 30px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .progress-bar-fill {
+        background: linear-gradient(90deg, var(--blue-accent) 0%, #00d4ff 100%);
+        height: 100%;
+        width: 0%;
+        transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+    
+    /* Quick Actions */
+    .quick-actions-section {
+        margin-top: 50px;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .section-title i {
+        font-size: 1.5rem;
+    }
+    
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    .action-btn {
+        background: white;
+        border: none;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-decoration: none;
+        color: var(--deep-blue);
+        font-weight: 700;
+        box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);
+        animation: slideUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .action-btn:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+    
+    .action-btn:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .action-btn:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(0, 31, 92, 0.4);
+    }
+    
+    .action-btn i {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+        display: block;
+        background: linear-gradient(135deg, var(--blue-accent) 0%, var(--blue-dark) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .action-btn:hover i {
+        transform: scale(1.2);
+        transition: transform 0.3s ease;
+    }
+    
+    .action-btn span {
+        display: block;
+        font-size: 1rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-page {
+            padding: 25px 12px;
+        }
+        
+        .dashboard-header {
+            padding: 25px 20px;
+            margin-bottom: 35px;
+        }
+        
+        .dashboard-header h1 {
+            font-size: 1.8rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+        
+        .stat-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .quick-actions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h1 class="mb-5">My Dashboard</h1>
-    
-    <!-- Stats -->
-    <div class="row mb-5">
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <small class="text-muted">Active Courses</small>
-                    <div class="stat-value text-primary">0</div>
+<div class="dashboard-page">
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1><i class="fas fa-tachometer-alt me-3"></i>Welcome Back, <span id="userName">Student</span></h1>
+            <p id="userGreeting">Let's continue your learning journey today</p>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <!-- Active Courses -->
+            <div class="stat-card">
+                <div class="stat-icon courses">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Active Courses</div>
+                    <div class="stat-value" id="activeCourses">0</div>
+                </div>
+            </div>
+            
+            <!-- Sessions Completed -->
+            <div class="stat-card">
+                <div class="stat-icon sessions">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Sessions Completed</div>
+                    <div class="stat-value" id="sessions">0</div>
+                </div>
+            </div>
+            
+            <!-- Pending Tasks -->
+            <div class="stat-card">
+                <div class="stat-icon tasks">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Pending Tasks</div>
+                    <div class="stat-value" id="pendingTasks">0</div>
+                </div>
+            </div>
+            
+            <!-- Learning Progress -->
+            <div class="stat-card">
+                <div class="stat-icon progress">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Learning Progress</div>
+                    <div class="stat-value" id="progressPercent">0<span style="font-size: 0.6em;">%</span></div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <small class="text-muted">Sessions Completed</small>
-                    <div class="stat-value text-success">0</div>
+        
+        <!-- Learning Progress Bar -->
+        <div class="progress-card">
+            <div class="progress-title">
+                <i class="fas fa-chart-line"></i> Overall Progress
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar" style="width: 0%;">
+                    <span id="progressText">0%</span>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <small class="text-muted">Pending Tasks</small>
-                    <div class="stat-value text-warning">0</div>
-                </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions-section">
+            <div class="section-title">
+                <i class="fas fa-bolt"></i> Quick Actions
             </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <small class="text-muted">Learning Progress</small>
-                    <div class="stat-value text-info">0%</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Actions -->
-    <div class="row">
-        <div class="col-md-6">
-            <h4 class="mb-3">Quick Actions</h4>
-            <div class="list-group">
-                <a href="/courses" class="list-group-item list-group-item-action quick-link">
-                    <i class="fas fa-book me-2"></i> Browse Courses
+            <div class="quick-actions-grid">
+                <a href="/courses" class="action-btn">
+                    <i class="fas fa-book-open"></i>
+                    <span>Browse Courses</span>
                 </a>
-                <a href="/tutors" class="list-group-item list-group-item-action quick-link">
-                    <i class="fas fa-chalkboard-user me-2"></i> Find Tutors
+                <a href="/tutors" class="action-btn">
+                    <i class="fas fa-chalkboard-user"></i>
+                    <span>Find Tutors</span>
                 </a>
-                <a href="/profile" class="list-group-item list-group-item-action quick-link">
-                    <i class="fas fa-user me-2"></i> Edit Profile
+                <a href="/profile" class="action-btn">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Edit Profile</span>
                 </a>
             </div>
         </div>
@@ -71,10 +426,77 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (!isLoggedIn()) {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Check if logged in
+    const token = localStorage.getItem('access_token');
+    if (!token) {
         window.location.href = '/login';
+        return;
     }
+    
+    // Load user data
+    loadDashboard();
 });
+
+async function loadDashboard() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch('/api/auth/me', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load user data');
+        }
+        
+        const result = await response.json();
+        const user = result.user;
+        
+        // Personalize dashboard
+        document.getElementById('userName').textContent = user.first_name || 'Student';
+        
+        const hour = new Date().getHours();
+        if (hour < 12) {
+            document.getElementById('userGreeting').textContent = '🌅 Good morning! Ready to learn something new?';
+        } else if (hour < 18) {
+            document.getElementById('userGreeting').textContent = '☀️ Good afternoon! Keep up the great work!';
+        } else {
+            document.getElementById('userGreeting').textContent = '🌙 Good evening! Learning is never too late!';
+        }
+        
+        // Load stats (for now showing 0, but can be connected to real data)
+        loadStats();
+        
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+    }
+}
+
+function loadStats() {
+    // These can be replaced with actual API calls to fetch real statistics
+    const activeCourses = 0;
+    const sessionsCompleted = 0;
+    const pendingTasks = 0;
+    const learningProgress = 0;
+    
+    // Update stat values
+    document.getElementById('activeCourses').textContent = activeCourses;
+    document.getElementById('sessions').textContent = sessionsCompleted;
+    document.getElementById('pendingTasks').textContent = pendingTasks;
+    document.getElementById('progressPercent').textContent = learningProgress;
+    
+    // Animate progress bar
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    
+    setTimeout(() => {
+        progressBar.style.width = learningProgress + '%';
+        progressText.textContent = learningProgress + '%';
+    }, 300);
+}
 </script>
 {% endblock %}
