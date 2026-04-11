@@ -344,50 +344,8 @@
         </div>
         
         <!-- Stats Grid -->
-        <div class="stats-grid">
-            <!-- Active Courses -->
-            <div class="stat-card">
-                <div class="stat-icon courses">
-                    <i class="fas fa-book"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Active Courses</div>
-                    <div class="stat-value" id="activeCourses">0</div>
-                </div>
-            </div>
-            
-            <!-- Sessions Completed -->
-            <div class="stat-card">
-                <div class="stat-icon sessions">
-                    <i class="fas fa-video"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Sessions Completed</div>
-                    <div class="stat-value" id="sessions">0</div>
-                </div>
-            </div>
-            
-            <!-- Pending Tasks -->
-            <div class="stat-card">
-                <div class="stat-icon tasks">
-                    <i class="fas fa-tasks"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Pending Tasks</div>
-                    <div class="stat-value" id="pendingTasks">0</div>
-                </div>
-            </div>
-            
-            <!-- Learning Progress -->
-            <div class="stat-card">
-                <div class="stat-icon progress">
-                    <i class="fas fa-chart-pie"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Learning Progress</div>
-                    <div class="stat-value" id="progressPercent">0<span style="font-size: 0.6em;">%</span></div>
-                </div>
-            </div>
+        <div class="stats-grid" id="statsGrid">
+            <!-- Dynamic stats based on user role -->
         </div>
         
         <!-- Learning Progress Bar -->
@@ -407,19 +365,8 @@
             <div class="section-title">
                 <i class="fas fa-bolt"></i> Quick Actions
             </div>
-            <div class="quick-actions-grid">
-                <a href="/courses" class="action-btn">
-                    <i class="fas fa-book-open"></i>
-                    <span>Browse Courses</span>
-                </a>
-                <a href="/tutors" class="action-btn">
-                    <i class="fas fa-chalkboard-user"></i>
-                    <span>Find Tutors</span>
-                </a>
-                <a href="/profile" class="action-btn">
-                    <i class="fas fa-user-edit"></i>
-                    <span>Edit Profile</span>
-                </a>
+            <div class="quick-actions-grid" id="quickActionsGrid">
+                <!-- Dynamic actions based on user role -->
             </div>
         </div>
     </div>
@@ -455,48 +402,120 @@ async function loadDashboard() {
         
         const result = await response.json();
         const user = result.user;
+        const userType = user.user_type.toLowerCase();
         
         // Personalize dashboard
-        document.getElementById('userName').textContent = user.first_name || 'Student';
+        document.getElementById('userName').textContent = user.first_name || 'User';
         
+        // Role-based greeting
         const hour = new Date().getHours();
+        let greeting = '';
         if (hour < 12) {
-            document.getElementById('userGreeting').textContent = '🌅 Good morning! Ready to learn something new?';
+            greeting = '🌅 Good morning!';
         } else if (hour < 18) {
-            document.getElementById('userGreeting').textContent = '☀️ Good afternoon! Keep up the great work!';
+            greeting = '☀️ Good afternoon!';
         } else {
-            document.getElementById('userGreeting').textContent = '🌙 Good evening! Learning is never too late!';
+            greeting = '🌙 Good evening!';
         }
         
-        // Load stats (for now showing 0, but can be connected to real data)
-        loadStats();
+        // Role-specific greetings
+        if (userType === 'student') {
+            document.getElementById('userGreeting').textContent = greeting + ' Ready to learn something new?';
+        } else if (userType === 'tutor') {
+            document.getElementById('userGreeting').textContent = greeting + ' Time to inspire your students!';
+        } else if (userType === 'parent') {
+            document.getElementById('userGreeting').textContent = greeting + ' Check on your child\'s progress!';
+        }
+        
+        // Render role-specific stats
+        renderStatCards(userType);
+        
+        // Render role-specific quick actions
+        renderQuickActions(userType);
         
     } catch (error) {
         console.error('Error loading dashboard:', error);
     }
 }
 
-function loadStats() {
-    // These can be replaced with actual API calls to fetch real statistics
-    const activeCourses = 0;
-    const sessionsCompleted = 0;
-    const pendingTasks = 0;
-    const learningProgress = 0;
+function renderStatCards(userType) {
+    const statsGrid = document.getElementById('statsGrid');
+    let statsHTML = '';
     
-    // Update stat values
-    document.getElementById('activeCourses').textContent = activeCourses;
-    document.getElementById('sessions').textContent = sessionsCompleted;
-    document.getElementById('pendingTasks').textContent = pendingTasks;
-    document.getElementById('progressPercent').textContent = learningProgress;
+    const statCards = {
+        student: [
+            { icon: 'fa-book', label: 'Active Courses', value: 0, id: 'stat1', color: 'courses' },
+            { icon: 'fa-video', label: 'Sessions Booked', value: 0, id: 'stat2', color: 'sessions' },
+            { icon: 'fa-tasks', label: 'Pending Tasks', value: 0, id: 'stat3', color: 'tasks' },
+            { icon: 'fa-chart-pie', label: 'Learning Progress', value: 0, id: 'stat4', color: 'progress' }
+        ],
+        tutor: [
+            { icon: 'fa-users', label: 'My Students', value: 0, id: 'stat1', color: 'courses' },
+            { icon: 'fa-calendar', label: 'Pending Sessions', value: 0, id: 'stat2', color: 'sessions' },
+            { icon: 'fa-star', label: 'Rating', value: 0, id: 'stat3', color: 'tasks', suffix: '★' },
+            { icon: 'fa-dollar-sign', label: 'Total Earnings', value: 0, id: 'stat4', color: 'progress', prefix: '$' }
+        ],
+        parent: [
+            { icon: 'fa-child', label: 'My Children', value: 0, id: 'stat1', color: 'courses' },
+            { icon: 'fa-chart-line', label: 'Avg Progress', value: 0, id: 'stat2', color: 'sessions', suffix: '%' },
+            { icon: 'fa-book', label: 'Active Courses', value: 0, id: 'stat3', color: 'tasks' },
+            { icon: 'fa-exclamation-circle', label: 'Alerts', value: 0, id: 'stat4', color: 'progress' }
+        ]
+    };
     
-    // Animate progress bar
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
+    const cards = statCards[userType] || statCards.student;
     
-    setTimeout(() => {
-        progressBar.style.width = learningProgress + '%';
-        progressText.textContent = learningProgress + '%';
-    }, 300);
+    cards.forEach((card, index) => {
+        statsHTML += `
+            <div class="stat-card" style="animation-delay: ${0.1 + index * 0.1}s;">
+                <div class="stat-icon ${card.color}">
+                    <i class="fas ${card.icon}"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">${card.label}</div>
+                    <div class="stat-value">${card.prefix || ''}${card.value}${card.suffix || ''}</div>
+                </div>
+            </div>
+        `;
+    });
+    
+    statsGrid.innerHTML = statsHTML;
+}
+
+function renderQuickActions(userType) {
+    const actionsGrid = document.getElementById('quickActionsGrid');
+    let actionsHTML = '';
+    
+    const actions = {
+        student: [
+            { icon: 'fa-book-open', label: 'Browse Courses', href: '/courses' },
+            { icon: 'fa-chalkboard-user', label: 'Find Tutors', href: '/tutors' },
+            { icon: 'fa-user-edit', label: 'Edit Profile', href: '/profile' }
+        ],
+        tutor: [
+            { icon: 'fa-calendar-plus', label: 'Create Session', href: '/sessions/new' },
+            { icon: 'fa-file-alt', label: 'View Feedback', href: '/feedback' },
+            { icon: 'fa-user-edit', label: 'Edit Profile', href: '/profile' }
+        ],
+        parent: [
+            { icon: 'fa-chart-bar', label: 'View Progress', href: '/children/progress' },
+            { icon: 'fa-envelope', label: 'Message Tutors', href: '/messaging' },
+            { icon: 'fa-user-edit', label: 'Edit Profile', href: '/profile' }
+        ]
+    };
+    
+    const quickActions = actions[userType] || actions.student;
+    
+    quickActions.forEach((action, index) => {
+        actionsHTML += `
+            <a href="${action.href}" class="action-btn" style="animation-delay: ${0.1 + index * 0.1}s;">
+                <i class="fas ${action.icon}"></i>
+                <span>${action.label}</span>
+            </a>
+        `;
+    });
+    
+    actionsGrid.innerHTML = actionsHTML;
 }
 </script>
 {% endblock %}
