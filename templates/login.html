@@ -326,13 +326,16 @@
                         <label for="password" class="form-label">
                             <i class="fas fa-lock me-2"></i>Password
                         </label>
-                        <input 
-                            type="password" 
-                            class="form-control" 
-                            id="password" 
-                            placeholder="••••••••" 
-                            required
-                        >
+                        <div class="password-input-wrapper">
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                id="password" 
+                                placeholder="••••••••" 
+                                required
+                            >
+                            <i class="fas fa-eye password-toggle" id="passwordToggle" title="Show password"></i>
+                        </div>
                     </div>
                     
                     <div class="remember-forgot">
@@ -393,6 +396,24 @@
             btn.classList.remove('loading');
             btn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Login';
             btn.disabled = false;
+        }
+    });
+    
+    // Password visibility toggle
+    document.getElementById('passwordToggle').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const icon = this;
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+            icon.title = 'Hide password';
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+            icon.title = 'Show password';
         }
     });
 </script>
