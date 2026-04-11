@@ -219,3 +219,53 @@ class AIPrediction(db.Model):
     prediction_type = db.Column(db.String(100))
     data = db.Column(db.JSON)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class CourseReview(db.Model):
+    __tablename__ = "course_reviews"
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    course_id = db.Column(UUID(as_uuid=True), db.ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
+    student_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
+    rating = db.Column(db.Float, nullable=False)  # 1-5
+    title = db.Column(db.String(255))
+    comment = db.Column(db.Text)
+    is_verified = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    course = db.relationship("Course", backref="reviews")
+    student = db.relationship("Student", backref="reviews")
+
+
+class TutorEarnings(db.Model):
+    __tablename__ = "tutor_earnings"
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tutor_id = db.Column(UUID(as_uuid=True), db.ForeignKey("tutors.id", ondelete="CASCADE"), nullable=False)
+    course_enrollment_id = db.Column(UUID(as_uuid=True), db.ForeignKey("course_enrollments.id", ondelete="SET NULL"))
+    session_id = db.Column(UUID(as_uuid=True), db.ForeignKey("tutor_sessions.id", ondelete="SET NULL"))
+    amount = db.Column(db.Float, nullable=False)
+    type = db.Column(db.String(50), default="course")  # 'course', 'session', 'refund'
+    status = db.Column(db.String(50), default="pending")  # 'pending', 'completed', 'withdrawn'
+    transaction_date = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    tutor = db.relationship("Tutor", backref="earnings")
+
+
+class StudentActivity(db.Model):
+    __tablename__ = "student_activity"
+    
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tutor_id = db.Column(UUID(as_uuid=True), db.ForeignKey("tutors.id", ondelete="CASCADE"), nullable=False)
+    student_id = db.Column(UUID(as_uuid=True), db.ForeignKey("students.id", ondelete="CASCADE"), nullable=False)
+    activity_type = db.Column(db.String(100), nullable=False)  # 'enrollment', 'submission', 'question', 'review'
+    title = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text)
+    related_entity_id = db.Column(UUID(as_uuid=True))  # course_id, submission_id, etc
+    status = db.Column(db.String(50))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    tutor = db.relationship("Tutor", backref="student_activities")
+    student = db.relationship("Student", backref="activities")

@@ -428,14 +428,13 @@ async function loadDashboard() {
         }
         
         // Render role-specific stats
-        renderStatCards(userType);
-        
+        renderStatCards(userType, user.id);
         // Render role-specific quick actions
         renderQuickActions(userType);
         
-        // Render tutor-specific sections if tutor
+// Render tutor-specific sections if tutor
         if (userType === 'tutor') {
-            renderTutorCourses();
+            renderTutorCourses(user.id);
         }
         
     } catch (error) {
@@ -443,9 +442,15 @@ async function loadDashboard() {
     }
 }
 
-function renderStatCards(userType) {
+function renderStatCards(userType, userId) {
     const statsGrid = document.getElementById('statsGrid');
     let statsHTML = '';
+    
+    if (userType === 'tutor') {
+        // Fetch real data from API
+        fetchTutorStats(userId, statsGrid);
+        return;
+    }
     
     const statCards = {
         student: [
@@ -453,12 +458,6 @@ function renderStatCards(userType) {
             { icon: 'fa-video', label: 'Sessions Booked', value: 0, id: 'stat2', color: 'sessions' },
             { icon: 'fa-tasks', label: 'Pending Tasks', value: 0, id: 'stat3', color: 'tasks' },
             { icon: 'fa-chart-pie', label: 'Learning Progress', value: 0, id: 'stat4', color: 'progress' }
-        ],
-        tutor: [
-            { icon: 'fa-users', label: 'Total Students', value: 1250, id: 'stat1', color: 'courses' },
-            { icon: 'fa-book', label: 'Active Courses', value: 4, id: 'stat2', color: 'sessions' },
-            { icon: 'fa-dollar-sign', label: 'Total Earnings', value: 12500, id: 'stat3', color: 'tasks', prefix: '$' },
-            { icon: 'fa-star', label: 'Average Rating', value: 4.8, id: 'stat4', color: 'progress', suffix: '/5' }
         ],
         parent: [
             { icon: 'fa-child', label: 'My Children', value: 0, id: 'stat1', color: 'courses' },
@@ -485,6 +484,68 @@ function renderStatCards(userType) {
     });
     
     statsGrid.innerHTML = statsHTML;
+}
+
+async function fetchTutorStats(tutorId, statsGrid) {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(`/api/tutors/${tutorId}/dashboard/stats`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch stats');
+        
+        const result = await response.json();
+        const stats = result.stats;
+        
+        let statsHTML = `
+            <div class="stat-card" style="animation-delay: 0.1s;">
+                <div class="stat-icon courses">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Total Students</div>
+                    <div class="stat-value">${stats.totalStudents}</div>
+                </div>
+            </div>
+            <div class="stat-card" style="animation-delay: 0.2s;">
+                <div class="stat-icon sessions">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Active Courses</div>
+                    <div class="stat-value">${stats.activeCourses}</div>
+                </div>
+            </div>
+            <div class="stat-card" style="animation-delay: 0.3s;">
+                <div class="stat-icon tasks">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Total Earnings</div>
+                    <div class="stat-value">$${Math.round(stats.totalEarnings)}</div>
+                </div>
+            </div>
+            <div class="stat-card" style="animation-delay: 0.4s;">
+                <div class="stat-icon progress">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Average Rating</div>
+                    <div class="stat-value">${stats.averageRating}/5</div>
+                </div>
+            </div>
+        `;
+        
+        statsGrid.innerHTML = statsHTML;
+    } catch (error) {
+        console.error('Error fetching tutor stats:', error);
+        statsGrid.innerHTML = '<div class="stat-card"><p style="color: red;">Failed to load stats</p></div>';
+    }
 }
 
 function renderQuickActions(userType) {
@@ -524,99 +585,112 @@ function renderQuickActions(userType) {
 }
 
 // Add tutor-specific section renderer
-function renderTutorCourses() {
+// Add tutor-specific section renderer
+async function renderTutorCourses(tutorId) {
     const dashboardContainer = document.querySelector('.dashboard-container');
     if (!dashboardContainer) return;
     
-    const tutorSection = document.createElement('div');
-    tutorSection.innerHTML = `
-        <div style="margin-top: 50px;">
-            <div class="section-title">
-                <i class="fas fa-fire"></i> Top Performing Courses
-            </div>
-            <div class="courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-                <div class="course-card" style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
-                        <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #001f5c;">Advanced Mathematics</h3>
-                        <span style="color: #ffc107; font-size: 0.9rem;">⭐ 4.9</span>
-                    </div>
-                    <div style="display: flex; gap: 15px; color: #666; font-size: 0.8rem; margin-bottom: 10px;">
-                        <span><i class="fas fa-users"></i> 342 students</span>
-                        <span><i class="fas fa-chart-pie"></i> 85%</span>
-                    </div>
-                    <div style="font-size: 1.4rem; font-weight: 800; color: #0066cc;">$5,120 earned</div>
-                </div>
-                
-                <div class="course-card" style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
-                        <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #001f5c;">Web Development Bootcamp</h3>
-                        <span style="color: #ffc107; font-size: 0.9rem;">⭐ 4.8</span>
-                    </div>
-                    <div style="display: flex; gap: 15px; color: #666; font-size: 0.8rem; margin-bottom: 10px;">
-                        <span><i class="fas fa-users"></i> 567 students</span>
-                        <span><i class="fas fa-chart-pie"></i> 72%</span>
-                    </div>
-                    <div style="font-size: 1.4rem; font-weight: 800; color: #0066cc;">$6,800 earned</div>
-                </div>
-                
-                <div class="course-card" style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
-                        <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #001f5c;">Physics 101</h3>
-                        <span style="color: #ffc107; font-size: 0.9rem;">⭐ 4.7</span>
-                    </div>
-                    <div style="display: flex; gap: 15px; color: #666; font-size: 0.8rem; margin-bottom: 10px;">
-                        <span><i class="fas fa-users"></i> 341 students</span>
-                        <span><i class="fas fa-chart-pie"></i> 68%</span>
-                    </div>
-                    <div style="font-size: 1.4rem; font-weight: 800; color: #0066cc;">$3,410 earned</div>
-                </div>
-            </div>
-        </div>
+    try {
+        const token = localStorage.getItem('access_token');
         
-        <div style="margin-top: 50px;">
-            <div class="section-title">
-                <i class="fas fa-clock"></i> Recent Activity
-            </div>
-            <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
+        // Fetch top courses and recent activities
+        const [coursesRes, activitiesRes] = await Promise.all([
+            fetch(`/api/tutors/${tutorId}/courses/top`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }),
+            fetch(`/api/tutors/${tutorId}/dashboard/recent-activities`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+        ]);
+        
+        const coursesData = await coursesRes.json();
+        const activitiesData = await activitiesRes.json();
+        
+        const courses = coursesData.courses || [];
+        const activities = activitiesData.activities || [];
+        
+        let coursesHTML = '';
+        courses.forEach(course => {
+            coursesHTML += `
+                <div class="course-card" style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                        <h3 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #001f5c;">${course.title}</h3>
+                        <span style="color: #ffc107; font-size: 0.9rem;">⭐ ${course.rating}</span>
+                    </div>
+                    <div style="display: flex; gap: 15px; color: #666; font-size: 0.8rem; margin-bottom: 10px;">
+                        <span><i class="fas fa-users"></i> ${course.students} students</span>
+                        <span><i class="fas fa-chart-pie"></i> ${course.completionRate}%</span>
+                    </div>
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #0066cc;">$${Math.round(course.earnings).toLocaleString()} earned</div>
+                </div>
+            `;
+        });
+        
+        let activitiesHTML = '';
+        activities.forEach(activity => {
+            let icon = 'fa-file-alt';
+            let bgColor = '#e3f2fd';
+            let iconColor = '#0066cc';
+            
+            if (activity.type === 'enrollment') {
+                icon = 'fa-user-plus';
+                bgColor = '#e8f5e9';
+                iconColor = '#4caf50';
+            } else if (activity.type === 'question') {
+                icon = 'fa-question-circle';
+                bgColor = '#fff3e0';
+                iconColor = '#ff9800';
+            } else if (activity.type === 'review') {
+                icon = 'fa-star';
+                bgColor = '#f3e5f5';
+                iconColor = '#9c27b0';
+            }
+            
+            activitiesHTML += `
                 <div style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 15px;">
-                    <div style="width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0066cc;">
-                        <i class="fas fa-file-alt"></i>
+                    <div style="width: 40px; height: 40px; background: ${bgColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: ${iconColor};">
+                        <i class="fas ${icon}"></i>
                     </div>
                     <div>
-                        <div style="font-weight: 600; color: #001f5c; font-size: 0.9rem;">New Assignment Submission</div>
-                        <div style="font-size: 0.8rem; color: #666;">John Doe submitted "Calculus Assignment 3" • 2 hours ago</div>
+                        <div style="font-weight: 600; color: #001f5c; font-size: 0.9rem;">${activity.title}</div>
+                        <div style="font-size: 0.8rem; color: #666;">${activity.description} • ${new Date(activity.timestamp).toLocaleDateString()}</div>
                     </div>
                 </div>
-                <div style="padding: 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 15px;">
-                    <div style="width: 40px; height: 40px; background: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #4caf50;">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 600; color: #001f5c; font-size: 0.9rem;">New Student Enrollment</div>
-                        <div style="font-size: 0.8rem; color: #666;">Sarah Johnson enrolled in "Advanced Mathematics" • 5 hours ago</div>
-                    </div>
+            `;
+        });
+        
+        const tutorSection = document.createElement('div');
+        tutorSection.innerHTML = `
+            <div style="margin-top: 50px;">
+                <div class="section-title">
+                    <i class="fas fa-fire"></i> Top Performing Courses
                 </div>
-                <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
-                    <div style="width: 40px; height: 40px; background: #fff3e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ff9800;">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 600; color: #001f5c; font-size: 0.9rem;">New 5-Star Review</div>
-                        <div style="font-size: 0.8rem; color: #666;">Emily Wilson left a review for "Web Development Bootcamp" • 2 days ago</div>
-                    </div>
+                <div class="courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    ${coursesHTML || '<p style="color: #666;">No courses yet</p>'}
                 </div>
             </div>
-        </div>
-    `;
-    
-    const progressSection = document.getElementById('progressSection');
-    if (progressSection) {
-        progressSection.style.display = 'none';
-    }
-    
-    const quickActionsSection = document.querySelector('.quick-actions-section');
-    if (quickActionsSection) {
-        quickActionsSection.parentNode.insertBefore(tutorSection, quickActionsSection.nextSibling);
+            
+            <div style="margin-top: 50px;">
+                <div class="section-title">
+                    <i class="fas fa-clock"></i> Recent Activity
+                </div>
+                <div style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 31, 92, 0.2);">
+                    ${activitiesHTML || '<div style="padding: 20px; color: #666;">No recent activities</div>'}
+                </div>
+            </div>
+        `;
+        
+        const progressSection = document.getElementById('progressSection');
+        if (progressSection) {
+            progressSection.style.display = 'none';
+        }
+        
+        const quickActionsSection = document.querySelector('.quick-actions-section');
+        if (quickActionsSection) {
+            quickActionsSection.parentNode.insertBefore(tutorSection, quickActionsSection.nextSibling);
+        }
+    } catch (error) {
+        console.error('Error rendering tutor courses:', error);
     }
 }
 </script>

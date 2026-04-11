@@ -10,7 +10,7 @@ import sys
 from dotenv import load_dotenv
 from sqlalchemy import text, inspect
 from zedu import create_app
-from models import db, User, Student, Tutor, Parent, School, Course, CourseEnrollment, Lesson, TutorSession, Assessment, Message, Notification, AIPrediction
+from models import db, User, Student, Tutor, Parent, School, Course, CourseEnrollment, Lesson, TutorSession, Assessment, Message, Notification, AIPrediction, CourseReview, TutorEarnings, StudentActivity
 
 load_dotenv()
 
