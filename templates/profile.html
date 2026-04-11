@@ -1,90 +1,600 @@
 {% extends "base.html" %}
 
-{% block title %}Profile - ZEDU{% endblock %}
+{% block title %}My Profile - ZEDU{% endblock %}
 
 {% block extra_css %}
 <style>
-    .profile-form { max-width: 500px; margin: 0 auto; }
-    .form-section { background: white; padding: 27px; border-radius: 8px; margin-bottom: 20px; }
+    :root {
+        --deep-blue: #001f5c;
+        --blue-dark: #003d9a;
+        --blue-accent: #0066cc;
+    }
+    
+    /* Page Background */
+    .profile-page {
+        background: linear-gradient(135deg, var(--deep-blue) 0%, var(--blue-dark) 50%, #1a1a2e 100%);
+        min-height: calc(100vh - 80px);
+        padding: 45px 18px;
+    }
+    
+    .profile-page::before {
+        content: '';
+        position: fixed;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(0, 102, 204, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+    }
+    
+    .profile-container {
+        max-width: 700px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Header */
+    .profile-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 50px;
+    }
+    
+    .profile-header h1 {
+        font-size: 2.8rem;
+        font-weight: 900;
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+    }
+    
+    .profile-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    /* Avatar Section */
+    .avatar-section {
+        text-align: center;
+        background: white;
+        padding: 40px 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 60px rgba(0, 31, 92, 0.3);
+    }
+    
+    .avatar-circle {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, var(--blue-accent) 0%, var(--blue-dark) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        color: white;
+        border: 4px solid var(--blue-accent);
+    }
+    
+    .user-full-name {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--deep-blue);
+        margin-bottom: 5px;
+    }
+    
+    .user-email {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    
+    .user-role-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--blue-accent) 0%, var(--blue-dark) 100%);
+        color: white;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-top: 15px;
+        text-transform: capitalize;
+    }
+    
+    /* Cards */
+    .profile-card {
+        background: white;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 31, 92, 0.3);
+        padding: 40px 30px;
+        margin-bottom: 25px;
+        animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .card-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: var(--deep-blue);
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .card-title i {
+        color: var(--blue-accent);
+    }
+    
+    /* Form Styling */
+    .profile-card .mb-3 {
+        margin-bottom: 18px;
+    }
+    
+    .profile-card label {
+        font-weight: 700;
+        color: var(--deep-blue);
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+        display: block;
+        letter-spacing: 0.3px;
+    }
+    
+    .form-control,
+    .form-select {
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 13px 16px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--blue-accent);
+        box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.15);
+        background: white;
+    }
+    
+    .form-control:disabled {
+        background-color: #f8f9fa;
+        color: #666;
+    }
+    
+    .form-control::placeholder {
+        color: #999;
+    }
+    
+    /* Password Toggle */
+    .password-toggle {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--blue-accent);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        user-select: none;
+    }
+    
+    .password-toggle:hover {
+        color: var(--blue-dark);
+        transform: translateY(-50%) scale(1.1);
+    }
+    
+    .password-input-wrapper {
+        position: relative;
+    }
+    
+    /* Row Layout */
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .form-row.full {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Buttons */
+    .btn-save {
+        background: linear-gradient(135deg, var(--blue-accent) 0%, var(--blue-dark) 100%);
+        border: none;
+        color: white;
+        font-weight: 800;
+        padding: 13px 27px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+        letter-spacing: 0.5px;
+        width: 100%;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 102, 204, 0.4);
+        background: linear-gradient(135deg, var(--blue-dark) 0%, var(--deep-blue) 100%);
+        color: white;
+    }
+    
+    .btn-save:active {
+        transform: translateY(-1px);
+    }
+    
+    .btn-save.loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    
+    /* Alerts */
+    .alert-message {
+        border-radius: 12px;
+        border: none;
+        padding: 15px 18px;
+        margin-bottom: 20px;
+        display: none;
+        animation: slideDown 0.3s ease;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .alert-message.show {
+        display: block;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-header h1 {
+            font-size: 2rem;
+        }
+        
+        .profile-card {
+            padding: 25px 18px;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h1 class="mb-5">My Profile</h1>
-    
-    <div class="profile-form">
-        <!-- Edit Profile -->
-        <div class="form-section">
-            <h4 class="mb-4">Edit Profile</h4>
+<div class="profile-page">
+    <div class="profile-container">
+        <!-- Header -->
+        <div class="profile-header">
+            <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+            <p>Manage your account settings and preferences</p>
+        </div>
+        
+        <!-- Avatar & User Info -->
+        <div class="avatar-section">
+            <div class="avatar-circle">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="user-full-name" id="userFullName">Loading...</div>
+            <div class="user-email" id="userEmail">Loading...</div>
+            <div class="user-role-badge" id="userRole">Loading...</div>
+        </div>
+        
+        <!-- Edit Profile Card -->
+        <div class="profile-card">
+            <div class="card-title">
+                <i class="fas fa-edit"></i> Edit Profile
+            </div>
+            
+            <div class="alert alert-success alert-message" id="profileSuccessAlert"></div>
+            <div class="alert alert-danger alert-message" id="profileErrorAlert"></div>
+            
             <form id="profileForm">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="firstName" class="form-label">First Name</label>
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">
+                            <i class="fas fa-user me-1"></i>First Name
+                        </label>
                         <input type="text" class="form-control" id="firstName" required>
                     </div>
-                    <div class="col-md-6">
+                    <div class="mb-3">
                         <label for="lastName" class="form-label">Last Name</label>
                         <input type="text" class="form-control" id="lastName" required>
                     </div>
                 </div>
+                
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope me-1"></i>Email Address
+                    </label>
                     <input type="email" class="form-control" id="email" disabled>
+                    <small class="text-muted">Email cannot be changed</small>
                 </div>
+                
                 <div class="mb-3">
-                    <label for="phone" class="form-label">Phone</label>
-                    <input type="tel" class="form-control" id="phone">
+                    <label for="phone" class="form-label">
+                        <i class="fas fa-phone me-1"></i>Phone Number
+                    </label>
+                    <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 000-0000">
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                
+                <div class="mb-3">
+                    <label for="whatsapp" class="form-label">
+                        <i class="fab fa-whatsapp me-1" style="color: #25d366;"></i>WhatsApp Number
+                    </label>
+                    <input type="tel" class="form-control" id="whatsapp" placeholder="+1 (555) 000-0000">
+                </div>
+                
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save me-2"></i>Save Changes
+                </button>
             </form>
         </div>
         
-        <!-- Change Password -->
-        <div class="form-section">
-            <h4 class="mb-4">Change Password</h4>
+        <!-- Change Password Card -->
+        <div class="profile-card">
+            <div class="card-title">
+                <i class="fas fa-lock"></i> Change Password
+            </div>
+            
+            <div class="alert alert-success alert-message" id="passwordSuccessAlert"></div>
+            <div class="alert alert-danger alert-message" id="passwordErrorAlert"></div>
+            
             <form id="passwordForm">
                 <div class="mb-3">
-                    <label for="oldPassword" class="form-label">Current Password</label>
-                    <input type="password" class="form-control" id="oldPassword" required>
+                    <label for="oldPassword" class="form-label">
+                        <i class="fas fa-key me-1"></i>Current Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-control" id="oldPassword" required>
+                        <i class="fas fa-eye password-toggle" id="oldPasswordToggle" title="Show password"></i>
+                    </div>
                 </div>
+                
                 <div class="mb-3">
-                    <label for="newPassword" class="form-label">New Password</label>
-                    <input type="password" class="form-control" id="newPassword" required>
+                    <label for="newPassword" class="form-label">
+                        <i class="fas fa-lock-open me-1"></i>New Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-control" id="newPassword" required>
+                        <i class="fas fa-eye password-toggle" id="newPasswordToggle" title="Show password"></i>
+                    </div>
+                    <small class="text-muted">At least 8 characters with numbers and special characters</small>
                 </div>
+                
                 <div class="mb-3">
-                    <label for="confirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPassword" required>
+                    <label for="confirmPassword" class="form-label">
+                        <i class="fas fa-check-circle me-1"></i>Confirm Password
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                        <i class="fas fa-eye password-toggle" id="confirmPasswordToggle" title="Show password"></i>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-warning w-100">Change Password</button>
+                
+                <button type="submit" class="btn btn-save" style="background: linear-gradient(135deg, #ff9800 0%, #ff6f00 100%); box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);">
+                    <i class="fas fa-key me-2"></i>Change Password
+                </button>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (!isLoggedIn()) {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Check if logged in
+    const token = localStorage.getItem('access_token');
+    if (!token) {
         window.location.href = '/login';
         return;
     }
-    // Load profile data if needed
+    
+    // Load user profile data
+    loadUserProfile();
 });
 
+async function loadUserProfile() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch('/api/auth/me', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '/login';
+            }
+            throw new Error('Failed to load profile');
+        }
+        
+        const result = await response.json();
+        const user = result.user;
+        
+        // Populate user info header
+        document.getElementById('userFullName').textContent = `${user.first_name} ${user.last_name}`;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userRole').textContent = user.user_type || 'User';
+        
+        // Populate form fields
+        document.getElementById('firstName').value = user.first_name || '';
+        document.getElementById('lastName').value = user.last_name || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('phone').value = user.phone || '';
+        document.getElementById('whatsapp').value = user.whatsapp_number || '';
+        
+    } catch (error) {
+        console.error('Error loading profile:', error);
+        document.getElementById('profileErrorAlert').textContent = '❌ Failed to load profile. Please refresh the page.';
+        document.getElementById('profileErrorAlert').classList.add('show');
+    }
+}
+
+// Profile Form Submit
 document.getElementById('profileForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    alert('Profile update feature coming soon!');
+    
+    const btn = e.target.querySelector('button[type="submit"]');
+    const successAlert = document.getElementById('profileSuccessAlert');
+    const errorAlert = document.getElementById('profileErrorAlert');
+    
+    successAlert.classList.remove('show');
+    errorAlert.classList.remove('show');
+    
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+    
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch('/api/users/profile', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                first_name: document.getElementById('firstName').value,
+                last_name: document.getElementById('lastName').value,
+                phone: document.getElementById('phone').value,
+                whatsapp_number: document.getElementById('whatsapp').value
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to update profile');
+        }
+        
+        successAlert.textContent = '✅ Profile updated successfully!';
+        successAlert.classList.add('show');
+        
+    } catch (error) {
+        errorAlert.textContent = '❌ ' + (error.message || 'Failed to update profile');
+        errorAlert.classList.add('show');
+    } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = '<i class="fas fa-save me-2"></i>Save Changes';
+    }
 });
 
+// Password Form Submit
 document.getElementById('passwordForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pwd = document.getElementById('newPassword').value;
-    const confirm = document.getElementById('confirmPassword').value;
-    if (pwd !== confirm) {
-        alert('Passwords do not match!');
+    
+    const btn = e.target.querySelector('button[type="submit"]');
+    const successAlert = document.getElementById('passwordSuccessAlert');
+    const errorAlert = document.getElementById('passwordErrorAlert');
+    
+    successAlert.classList.remove('show');
+    errorAlert.classList.remove('show');
+    
+    const oldPwd = document.getElementById('oldPassword').value;
+    const newPwd = document.getElementById('newPassword').value;
+    const confirmPwd = document.getElementById('confirmPassword').value;
+    
+    // Validate
+    if (newPwd.length < 8) {
+        errorAlert.textContent = '❌ New password must be at least 8 characters long';
+        errorAlert.classList.add('show');
         return;
     }
-    alert('Password change feature coming soon!');
+    
+    if (newPwd !== confirmPwd) {
+        errorAlert.textContent = '❌ Passwords do not match';
+        errorAlert.classList.add('show');
+        return;
+    }
+    
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Changing...';
+    
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch('/api/users/change-password', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                current_password: oldPwd,
+                new_password: newPwd
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.message || 'Failed to change password');
+        }
+        
+        successAlert.textContent = '✅ Password changed successfully!';
+        successAlert.classList.add('show');
+        
+        // Clear form
+        document.getElementById('passwordForm').reset();
+        
+    } catch (error) {
+        errorAlert.textContent = '❌ ' + (error.message || 'Failed to change password');
+        errorAlert.classList.add('show');
+    } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = '<i class="fas fa-key me-2"></i>Change Password';
+    }
 });
+
+// Password toggle functions
+function setupPasswordToggle(toggleId, inputId) {
+    document.getElementById(toggleId).addEventListener('click', function() {
+        const input = document.getElementById(inputId);
+        const icon = this;
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+            icon.title = 'Hide password';
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+            icon.title = 'Show password';
+        }
+    });
+}
+
+setupPasswordToggle('oldPasswordToggle', 'oldPassword');
+setupPasswordToggle('newPasswordToggle', 'newPassword');
+setupPasswordToggle('confirmPasswordToggle', 'confirmPassword');
 </script>
 {% endblock %}
