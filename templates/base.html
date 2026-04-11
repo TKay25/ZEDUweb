@@ -148,7 +148,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item" id="homeNav"><a class="nav-link" href="/">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/courses">Courses</a></li>
                     <li class="nav-item"><a class="nav-link" href="/tutors">Tutors</a></li>
                     <li class="nav-item dropdown" id="userMenu" style="display:none;">
@@ -196,8 +196,29 @@
         }
         function logout() {
             localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
             window.location.href = '/';
         }
+        
+        // Toggle Home link and auth menu based on login status
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('access_token');
+            const homeNav = document.getElementById('homeNav');
+            const authMenu = document.getElementById('authMenu');
+            const userMenu = document.getElementById('userMenu');
+            
+            if (token) {
+                // User is logged in
+                homeNav.style.display = 'none';
+                authMenu.style.display = 'none';
+                userMenu.style.display = 'block';
+            } else {
+                // User is not logged in
+                homeNav.style.display = 'block';
+                authMenu.style.display = 'block';
+                userMenu.style.display = 'none';
+            }
+        });
         function isLoggedIn() {
             return localStorage.getItem('access_token') !== null;
         }
