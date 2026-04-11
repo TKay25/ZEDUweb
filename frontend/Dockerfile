@@ -27,12 +27,15 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
-# Copy HTML files
-COPY *.html ./
+# Copy HTML files from frontend directory
+COPY frontend/*.html ./
 
 # Copy CSS and JS directories
-COPY css/ ./css/
-COPY js/ ./js/
+COPY frontend/css/ ./css/
+COPY frontend/js/ ./js/
+
+# Copy public assets if they exist
+COPY frontend/public/ ./public/ 2>/dev/null || true
 
 EXPOSE 80
 
