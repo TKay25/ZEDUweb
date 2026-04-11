@@ -2,70 +2,70 @@
 
 {% block title %}Tutors - ZEDU{% endblock %}
 
+{% block extra_css %}
+<style>
+    .tutor-card { border: 0; transition: transform 0.3s; }
+    .tutor-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .tutor-badge { display: inline-block; background: #e7f3ff; color: #0d6efd; padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
+<div class="container py-5">
     <h1 class="mb-4">Find Tutors</h1>
     
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-6 mb-3">
             <input type="text" class="form-control" id="searchInput" placeholder="Search tutors...">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6 mb-3">
             <select class="form-select" id="filterSubject">
                 <option value="">All Subjects</option>
                 <option value="Mathematics">Mathematics</option>
                 <option value="English">English</option>
                 <option value="Science">Science</option>
-                <option value="History">History</option>
             </select>
         </div>
     </div>
     
     <div id="tutorsList" class="row">
-        <p class="text-muted">Loading tutors...</p>
+        <div class="col-12"><p class="text-muted text-center">Loading tutors...</p></div>
     </div>
 </div>
 
 <script>
 async function loadTutors() {
-    try {
-        const response = await fetch('/api/tutors');
-        const data = await response.json();
-        
-        const tutorsList = document.getElementById('tutorsList');
-        tutorsList.innerHTML = '';
-        
-        if (data.tutors && data.tutors.length > 0) {
-            data.tutors.forEach(tutor => {
-                const tutorCard = `
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Tutor ${tutor.id}</h5>
-                                <p class="card-text">
-                                    <strong>Subjects:</strong> ${tutor.subjects || 'N/A'}<br>
-                                    <strong>Rate:</strong> $${tutor.hourly_rate || 'N/A'}/hour
-                                </p>
-                                <p class="text-muted"><small>📚 ${tutor.qualifications || 'Qualified'}</small></p>
-                                <button class="btn btn-primary" onclick="contactTutor(${tutor.id})">Contact</button>
+    const result = await apiCall('/tutors');
+    const tutorsList = document.getElementById('tutorsList');
+    tutorsList.innerHTML = '';
+    
+    if (result.tutors && result.tutors.length > 0) {
+        result.tutors.forEach(tutor => {
+            tutorsList.innerHTML += `
+                <div class="col-md-4 mb-4">
+                    <div class="card tutor-card h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-user-circle fa-3x text-primary"></i>
                             </div>
+                            <h5 class="card-title">Tutor ${tutor.id}</h5>
+                            <p class="card-text"><strong>Subjects:</strong><br>
+                                <span class="tutor-badge">${tutor.subjects || 'Multiple'}</span>
+                            </p>
+                            <p class="card-text"><strong>Rate:</strong> $${tutor.hourly_rate || 'TBA'}/hour</p>
+                            <button class="btn btn-primary btn-sm w-100" onclick="contactTutor(${tutor.id})">Contact</button>
                         </div>
                     </div>
-                `;
-                tutorsList.insertAdjacentHTML('beforeend', tutorCard);
-            });
-        } else {
-            tutorsList.innerHTML = '<p class="text-muted">No tutors found.</p>';
-        }
-    } catch (error) {
-        console.error('Error loading tutors:', error);
-        document.getElementById('tutorsList').innerHTML = '<p class="text-danger">Error loading tutors</p>';
+                </div>
+            `;
+        });
+    } else {
+        tutorsList.innerHTML = '<div class="col-12"><p class="text-muted text-center">No tutors found</p></div>';
     }
 }
 
 function contactTutor(tutorId) {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
+    if (!isLoggedIn()) {
         alert('Please login to contact tutors');
         window.location.href = '/login';
         return;

@@ -2,61 +2,65 @@
 
 {% block title %}Home - ZEDU{% endblock %}
 
+{% block extra_css %}
+<style>
+    .hero { background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%); color: white; padding: 80px 0; }
+    .feature-card { border: 0; transition: transform 0.3s, box-shadow 0.3s; }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+    .feature-icon { font-size: 3rem; margin-bottom: 15px; color: #0d6efd; }
+    .cta { background-color: #f8f9fa; padding: 60px 0; }
+</style>
+{% endblock %}
+
 {% block content %}
-<!-- Hero Section -->
-<section class="bg-primary text-white py-5">
-    <div class="container">
+<!-- Hero -->
+<section class="hero">
+    <div class="container py-5">
         <div class="row align-items-center">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-4">Welcome to ZEDU</h1>
-                <p class="lead mb-4">Your comprehensive educational platform connecting students, tutors, and schools in one place.</p>
+                <p class="lead mb-4">Connect with expert tutors, access thousands of courses, and transform your learning journey.</p>
                 <div class="d-flex gap-3">
-                    <a href="/courses" class="btn btn-light btn-lg">
-                        <i class="fas fa-book"></i> Browse Courses
-                    </a>
-                    <a href="/tutors" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-chalkboard-user"></i> Find Tutors
-                    </a>
+                    <a href="/courses" class="btn btn-light btn-lg"><i class="fas fa-book me-2"></i>Browse Courses</a>
+                    <a href="/tutors" class="btn btn-outline-light btn-lg"><i class="fas fa-chalkboard-user me-2"></i>Find Tutors</a>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="text-center">
-                    <i class="fas fa-graduation-cap fa-10x" style="opacity: 0.2;"></i>
-                </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-graduation-cap fa-10x" style="opacity:0.2;"></i>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Features Section -->
+<!-- Features -->
 <section class="py-5">
     <div class="container">
         <h2 class="text-center mb-5">Why Choose ZEDU?</h2>
         <div class="row">
             <div class="col-md-4 mb-4">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <i class="fas fa-book fa-3x text-primary mb-3"></i>
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <div class="feature-icon"><i class="fas fa-book"></i></div>
                         <h5 class="card-title">Thousands of Courses</h5>
-                        <p class="card-text">Access a wide variety of courses taught by expert tutors across all subjects</p>
+                        <p class="card-text">Access diverse courses taught by expert tutors across all subjects and skill levels.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <i class="fas fa-video fa-3x text-success mb-3"></i>
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <div class="feature-icon"><i class="fas fa-video"></i></div>
                         <h5 class="card-title">Live Sessions</h5>
-                        <p class="card-text">Connect with tutors via interactive video sessions for personalized learning</p>
+                        <p class="card-text">Interactive video sessions with personalized tutoring to match your learning pace.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <i class="fas fa-robot fa-3x text-warning mb-3"></i>
-                        <h5 class="card-title">AI-Powered Learning</h5>
-                        <p class="card-text">Get personalized recommendations and predictions powered by AI</p>
+                <div class="card feature-card">
+                    <div class="card-body text-center">
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                        <h5 class="card-title">AI-Powered</h5>
+                        <p class="card-text">Get personalized recommendations and learning predictions powered by AI.</p>
                     </div>
                 </div>
             </div>
@@ -64,11 +68,11 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="bg-light py-5">
+<!-- CTA -->
+<section class="cta">
     <div class="container text-center">
-        <h2 class="mb-4">Ready to start learning?</h2>
-        <a href="/login" class="btn btn-primary btn-lg">Get Started</a>
+        <h2 class="mb-4">Ready to Start Learning?</h2>
+        <a href="/register" class="btn btn-primary btn-lg"><i class="fas fa-rocket me-2"></i>Get Started</a>
     </div>
 </section>
 {% endblock %}

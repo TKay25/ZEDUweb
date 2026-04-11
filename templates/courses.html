@@ -2,68 +2,68 @@
 
 {% block title %}Courses - ZEDU{% endblock %}
 
+{% block extra_css %}
+<style>
+    .course-card { border: 0; transition: transform 0.3s; }
+    .course-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .filter-section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
+<div class="container py-5">
     <h1 class="mb-4">Courses</h1>
     
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <input type="text" class="form-control" id="searchInput" placeholder="Search courses...">
-        </div>
-        <div class="col-md-3">
-            <select class="form-select" id="filterSubject">
-                <option value="">All Subjects</option>
-                <option value="Mathematics">Mathematics</option>
-                <option value="English">English</option>
-                <option value="Science">Science</option>
-                <option value="History">History</option>
-            </select>
+    <div class="filter-section">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search courses...">
+            </div>
+            <div class="col-md-6 mb-3">
+                <select class="form-select" id="filterSubject">
+                    <option value="">All Subjects</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="English">English</option>
+                    <option value="Science">Science</option>
+                </select>
+            </div>
         </div>
     </div>
     
     <div id="coursesList" class="row">
-        <p class="text-muted">Loading courses...</p>
+        <div class="col-12"><p class="text-muted text-center">Loading courses...</p></div>
     </div>
 </div>
 
 <script>
 async function loadCourses() {
-    try {
-        const response = await fetch('/api/courses');
-        const data = await response.json();
-        
-        const coursesList = document.getElementById('coursesList');
-        coursesList.innerHTML = '';
-        
-        if (data.courses && data.courses.length > 0) {
-            data.courses.forEach(course => {
-                const courseCard = `
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">${course.title}</h5>
-                                <p class="card-text">${course.description || 'No description'}</p>
-                                <p class="text-muted"><small>Subject: ${course.subject}</small></p>
-                                <button class="btn btn-primary" onclick="enrollCourse(${course.id})">Enroll</button>
-                            </div>
+    const result = await apiCall('/courses');
+    const coursesList = document.getElementById('coursesList');
+    coursesList.innerHTML = '';
+    
+    if (result.courses && result.courses.length > 0) {
+        result.courses.forEach(course => {
+            coursesList.innerHTML += `
+                <div class="col-md-4 mb-4">
+                    <div class="card course-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">${course.title}</h5>
+                            <p class="card-text text-muted"><small>${course.subject}</small></p>
+                            <p class="card-text">${course.description || 'No description'}</p>
+                            <button class="btn btn-primary btn-sm w-100" onclick="enrollCourse(${course.id})">Enroll</button>
                         </div>
                     </div>
-                `;
-                coursesList.insertAdjacentHTML('beforeend', courseCard);
-            });
-        } else {
-            coursesList.innerHTML = '<p class="text-muted">No courses found.</p>';
-        }
-    } catch (error) {
-        console.error('Error loading courses:', error);
-        document.getElementById('coursesList').innerHTML = '<p class="text-danger">Error loading courses</p>';
+                </div>
+            `;
+        });
+    } else {
+        coursesList.innerHTML = '<div class="col-12"><p class="text-muted text-center">No courses found</p></div>';
     }
 }
 
 function enrollCourse(courseId) {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-        alert('Please login to enroll in courses');
+    if (!isLoggedIn()) {
+        alert('Please login to enroll');
         window.location.href = '/login';
         return;
     }

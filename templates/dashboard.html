@@ -2,59 +2,69 @@
 
 {% block title %}Dashboard - ZEDU{% endblock %}
 
+{% block extra_css %}
+<style>
+    .stat-card { border: 0; border-left: 4px solid #0d6efd; }
+    .stat-value { font-size: 2rem; font-weight: 700; }
+    .quick-link { transition: all 0.3s; }
+    .quick-link:hover { transform: translateX(5px); }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-4">My Dashboard</h1>
+<div class="container py-5">
+    <h1 class="mb-5">My Dashboard</h1>
     
-    <div class="row">
+    <!-- Stats -->
+    <div class="row mb-5">
         <div class="col-md-3 mb-4">
-            <div class="card bg-primary text-white">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <h6 class="card-title">Active Courses</h6>
-                    <h2 id="activeCourses">0</h2>
+                    <small class="text-muted">Active Courses</small>
+                    <div class="stat-value text-primary">0</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-4">
-            <div class="card bg-success text-white">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <h6 class="card-title">Sessions Completed</h6>
-                    <h2 id="sessionsCompleted">0</h2>
+                    <small class="text-muted">Sessions Completed</small>
+                    <div class="stat-value text-success">0</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-4">
-            <div class="card bg-warning text-white">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <h6 class="card-title">Pending Tasks</h6>
-                    <h2 id="pendingTasks">0</h2>
+                    <small class="text-muted">Pending Tasks</small>
+                    <div class="stat-value text-warning">0</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-4">
-            <div class="card bg-info text-white">
+            <div class="card stat-card">
                 <div class="card-body">
-                    <h6 class="card-title">Progress</h6>
-                    <h2 id="progress">0%</h2>
+                    <small class="text-muted">Learning Progress</small>
+                    <div class="stat-value text-info">0%</div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="row mt-5">
+    <!-- Actions -->
+    <div class="row">
         <div class="col-md-6">
-            <h3>Recent Activity</h3>
-            <div id="activityList" class="list-group">
-                <p class="text-muted">No recent activity</p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h3>Quick Actions</h3>
+            <h4 class="mb-3">Quick Actions</h4>
             <div class="list-group">
-                <a href="/courses" class="list-group-item list-group-item-action">Browse Courses</a>
-                <a href="/tutors" class="list-group-item list-group-item-action">Find Tutors</a>
-                <a href="/profile" class="list-group-item list-group-item-action">Edit Profile</a>
-                <a href="#" onclick="logout()" class="list-group-item list-group-item-action text-danger">Logout</a>
+                <a href="/courses" class="list-group-item list-group-item-action quick-link">
+                    <i class="fas fa-book me-2"></i> Browse Courses
+                </a>
+                <a href="/tutors" class="list-group-item list-group-item-action quick-link">
+                    <i class="fas fa-chalkboard-user me-2"></i> Find Tutors
+                </a>
+                <a href="/profile" class="list-group-item list-group-item-action quick-link">
+                    <i class="fas fa-user me-2"></i> Edit Profile
+                </a>
             </div>
         </div>
     </div>
@@ -62,37 +72,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
+    if (!isLoggedIn()) {
         window.location.href = '/login';
-        return;
     }
-    
-    // Load dashboard data
-    loadDashboardData();
 });
-
-async function loadDashboardData() {
-    try {
-        const token = localStorage.getItem('access_token');
-        
-        // Fetch user courses
-        const coursesRes = await fetch('/api/courses', {
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
-        const coursesData = await coursesRes.json();
-        document.getElementById('activeCourses').textContent = coursesData.courses?.length || 0;
-        
-        // Fetch sessions
-        const sessionsRes = await fetch('/api/sessions', {
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
-        const sessionsData = await sessionsRes.json();
-        document.getElementById('sessionsCompleted').textContent = sessionsData.sessions?.length || 0;
-        
-    } catch (error) {
-        console.error('Error loading dashboard:', error);
-    }
-}
 </script>
 {% endblock %}
