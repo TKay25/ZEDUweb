@@ -10,11 +10,19 @@ class Config:
     FLASK_ENV = os.getenv("FLASK_ENV", "development")
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-key-change-in-production")
     
-    # Database
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        "postgresql://user:password@localhost:5432/zedu"
-    )
+    # Database - Read from DATABASE_URL environment variable
+    # Render provides this automatically for PostgreSQL databases
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    if not SQLALCHEMY_DATABASE_URI:
+        # Only use localhost default in development
+        if FLASK_ENV == "development":
+            SQLALCHEMY_DATABASE_URI = "postgresql://user:password@localhost:5432/zedu"
+        else:
+            raise ValueError(
+                "DATABASE_URL environment variable is not set. "
+                "On Render, this should be automatically set for PostgreSQL databases."
+            )
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # JWT
