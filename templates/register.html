@@ -558,17 +558,38 @@
         
         try {
             const fullWhatsAppNumber = countryCode + whatsappNumber;
-            const result = await apiCall('/auth/register', 'POST', {
-                email: document.getElementById('email').value,
-                password: pwd,
-                first_name: document.getElementById('firstName').value,
-                last_name: document.getElementById('lastName').value,
-                user_type: document.getElementById('userType').value,
-                whatsapp_number: fullWhatsAppNumber
+            const response = await fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: document.getElementById('email').value,
+                    password: pwd,
+                    first_name: document.getElementById('firstName').value,
+                    last_name: document.getElementById('lastName').value,
+                    user_type: document.getElementById('userType').value,
+                    phone: document.getElementById('whatsappNumber').value.substring(0, 20),
+                    whatsapp_number: fullWhatsAppNumber
+                })
             });
             
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Registration failed');
+            }
+            
             if (result.user) {
-                window.location.href = '/login?success=registered';
+                // Encode user data to pass to login page
+                const userData = encodeURIComponent(JSON.stringify({
+                    email: result.user.email,
+                    userType: result.user.user_type,
+                    firstName: result.user.first_name
+                }));
+                
+                // Redirect to login with success and prefilled email
+                window.location.href = `/login?success=registered&email=${encodeURIComponent(result.user.email)}`;
             } else {
                 throw new Error(result.message || 'Registration failed');
             }

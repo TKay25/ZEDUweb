@@ -306,6 +306,7 @@
         
         <div class="card login-card">
             <div class="card-body">
+                <div class="alert alert-success alert-message" id="successAlert" role="alert" style="display: none;"></div>
                 <div class="alert alert-danger alert-message" id="errorAlert" role="alert"></div>
                 
                 <form id="loginForm" class="login-form">
@@ -366,27 +367,82 @@
 </div>
 
 <script>
+    // Check for success parameter on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const successParam = urlParams.get('success');
+        const emailParam = urlParams.get('email');
+        
+        // Show success message if coming from signup
+        if (successParam === 'registered') {
+            const successAlert = document.getElementById('successAlert');
+            successAlert.innerHTML = '✅ <strong>Account Created Successfully!</strong> Please log in with your credentials.';
+            successAlert.style.display = 'block';
+        }
+        
+        // Prefill email if provided in URL
+        if (emailParam) {
+            document.getElementById('email').value = decodeURIComponent(emailParam);
+        }
+    });
+    
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const btn = e.target.querySelector('button[type="submit"]');
         const errorAlert = document.getElementById('errorAlert');
+        const successAlert = document.getElementById('successAlert');
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         
-        // Clear previous error
+        // Clear previous alerts
         errorAlert.classList.remove('show');
+        successAlert.style.display = 'none';
         
         // Show loading state
         btn.classList.add('loading');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Logging in...';
         
         try {
-            const result = await apiCall('/auth/login', 'POST', { email, password });
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Login failed');
+            }
             
             if (result.access_token) {
                 localStorage.setItem('access_token', result.access_token);
-                window.location.href = '/dashboard';
+                localStorage.setItem('refresh_token', result.refresh_token);
+                localStorage.setItem('user', JSON.stringify(result.user));
+                
+                // Determine redirect based on user type
+                let redirectUrl = '/dashboard';
+                if (result.redirect_dashboard) {
+                    redirectUrl = result.redirect_dashboard;
+                } else if (result.user && result.user.user_type) {
+                    const userType = result.user.user_type.toLowerCase();
+                    if (userType === 'student' || userType === 'tutor' || userType === 'parent') {
+                        redirectUrl = `/${userType}/dashboard`;
+                    }
+                }
+                
+                // Show success message
+                successAlert.innerHTML = `✅ <strong>Welcome, ${result.user.first_name}!</strong> Redirecting to your dashboard...`;
+                successAlert.style.display = 'block';
+                successAlert.className = 'alert alert-success alert-message show';
+                
+                // Redirect after brief delay
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1500);
             } else {
                 throw new Error(result.message || 'Login failed');
             }
