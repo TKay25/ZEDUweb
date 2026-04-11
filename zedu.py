@@ -101,6 +101,21 @@ def create_app(config_name='development'):
         """Dashboard page"""
         return render_template("dashboard.html")
     
+    @app.route("/student/dashboard", methods=["GET"])
+    def student_dashboard_page():
+        """Student dashboard page"""
+        return render_template("dashboard.html")
+    
+    @app.route("/tutor/dashboard", methods=["GET"])
+    def tutor_dashboard_page():
+        """Tutor dashboard page"""
+        return render_template("dashboard.html")
+    
+    @app.route("/parent/dashboard", methods=["GET"])
+    def parent_dashboard_page():
+        """Parent dashboard page"""
+        return render_template("dashboard.html")
+    
     @app.route("/profile", methods=["GET"])
     def profile_page():
         """Profile page"""
