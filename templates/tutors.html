@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Tutors - ZEDU{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Find Tutors</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search tutors...">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="filterSubject">
+                <option value="">All Subjects</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="History">History</option>
+            </select>
+        </div>
+    </div>
+    
+    <div id="tutorsList" class="row">
+        <p class="text-muted">Loading tutors...</p>
+    </div>
+</div>
+
+<script>
+async function loadTutors() {
+    try {
+        const response = await fetch('/api/tutors');
+        const data = await response.json();
+        
+        const tutorsList = document.getElementById('tutorsList');
+        tutorsList.innerHTML = '';
+        
+        if (data.tutors && data.tutors.length > 0) {
+            data.tutors.forEach(tutor => {
+                const tutorCard = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Tutor ${tutor.id}</h5>
+                                <p class="card-text">
+                                    <strong>Subjects:</strong> ${tutor.subjects || 'N/A'}<br>
+                                    <strong>Rate:</strong> $${tutor.hourly_rate || 'N/A'}/hour
+                                </p>
+                                <p class="text-muted"><small>📚 ${tutor.qualifications || 'Qualified'}</small></p>
+                                <button class="btn btn-primary" onclick="contactTutor(${tutor.id})">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                tutorsList.insertAdjacentHTML('beforeend', tutorCard);
+            });
+        } else {
+            tutorsList.innerHTML = '<p class="text-muted">No tutors found.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading tutors:', error);
+        document.getElementById('tutorsList').innerHTML = '<p class="text-danger">Error loading tutors</p>';
+    }
+}
+
+function contactTutor(tutorId) {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        alert('Please login to contact tutors');
+        window.location.href = '/login';
+        return;
+    }
+    alert('Contact form for tutor ' + tutorId);
+}
+
+document.addEventListener('DOMContentLoaded', loadTutors);
+</script>
+{% endblock %}

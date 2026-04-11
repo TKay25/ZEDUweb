@@ -1,3 +1,0 @@
-"""
-ZEDU Backend Package
-"""

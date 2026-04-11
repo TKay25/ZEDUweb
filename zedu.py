@@ -3,7 +3,7 @@ ZEDU - Educational Platform
 Main Flask Application (ConnectLink-style flat structure)
 """
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
@@ -17,7 +17,7 @@ from config import config
 
 def create_app(config_name='development'):
     """Create and configure Flask application"""
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='templates', static_folder='frontend')
     
     # Load configuration
     app.config.from_object(config[config_name])
@@ -70,7 +70,43 @@ def create_app(config_name='development'):
     def internal_error(error):
         return {"message": "Internal server error"}, 500
     
-    # Health check endpoint
+    # ===== PAGE ROUTES (render templates) =====
+    @app.route("/", methods=["GET"])
+    def home():
+        """Home page"""
+        return render_template("index.html")
+    
+    @app.route("/login", methods=["GET"])
+    def login_page():
+        """Login page"""
+        return render_template("login.html")
+    
+    @app.route("/register", methods=["GET"])
+    def register_page():
+        """Registration page"""
+        return render_template("register.html")
+    
+    @app.route("/courses", methods=["GET"])
+    def courses_page():
+        """Courses page"""
+        return render_template("courses.html")
+    
+    @app.route("/tutors", methods=["GET"])
+    def tutors_page():
+        """Tutors page"""
+        return render_template("tutors.html")
+    
+    @app.route("/dashboard", methods=["GET"])
+    def dashboard_page():
+        """Dashboard page"""
+        return render_template("dashboard.html")
+    
+    @app.route("/profile", methods=["GET"])
+    def profile_page():
+        """Profile page"""
+        return render_template("profile.html")
+    
+    # ===== API HEALTH CHECK =====
     @app.route("/api/health", methods=["GET"])
     def health_check():
         return {"status": "ok", "message": "ZEDU API is running"}, 200

@@ -15,16 +15,6 @@ services:
         generateValue: true
       - key: JWT_SECRET_KEY
         generateValue: true
-      - key: FRONTEND_URL
-        value: https://zedu-frontend.onrender.com
-
-  - type: web
-    name: zedu-frontend
-    runtime: docker
-    dockerfilePath: ./frontend/Dockerfile
-    region: oregon
-    plan: free
-    autoDeployOnPush: true
 
 databases:
   - name: zedu-db

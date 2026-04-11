@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - ZEDU{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h1 class="mb-4">My Profile</h1>
+                    
+                    <form id="profileForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="First name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Last name" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email" disabled>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="Phone number">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary mb-3">Update Profile</button>
+                    </form>
+                    
+                    <hr>
+                    
+                    <h4>Change Password</h4>
+                    <form id="passwordForm">
+                        <div class="mb-3">
+                            <label for="oldPassword" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="oldPassword" placeholder="Current password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="New password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm new password" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+    
+    loadProfile();
+});
+
+async function loadProfile() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch('/api/users/me', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('firstName').value = data.user?.first_name || '';
+            document.getElementById('lastName').value = data.user?.last_name || '';
+            document.getElementById('email').value = data.user?.email || '';
+            document.getElementById('phone').value = data.user?.phone || '';
+        }
+    } catch (error) {
+        console.error('Error loading profile:', error);
+    }
+}
+
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const token = localStorage.getItem('access_token');
+    
+    try {
+        const response = await fetch('/api/users/me', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                first_name: document.getElementById('firstName').value,
+                last_name: document.getElementById('lastName').value,
+                phone: document.getElementById('phone').value
+            })
+        });
+        
+        if (response.ok) {
+            alert('Profile updated successfully!');
+        } else {
+            alert('Error updating profile');
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
+
+document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (newPassword !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+    
+    alert('Password change feature coming soon!');
+});
+</script>
+{% endblock %}

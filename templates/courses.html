@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Courses - ZEDU{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Courses</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search courses...">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="filterSubject">
+                <option value="">All Subjects</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="History">History</option>
+            </select>
+        </div>
+    </div>
+    
+    <div id="coursesList" class="row">
+        <p class="text-muted">Loading courses...</p>
+    </div>
+</div>
+
+<script>
+async function loadCourses() {
+    try {
+        const response = await fetch('/api/courses');
+        const data = await response.json();
+        
+        const coursesList = document.getElementById('coursesList');
+        coursesList.innerHTML = '';
+        
+        if (data.courses && data.courses.length > 0) {
+            data.courses.forEach(course => {
+                const courseCard = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">${course.title}</h5>
+                                <p class="card-text">${course.description || 'No description'}</p>
+                                <p class="text-muted"><small>Subject: ${course.subject}</small></p>
+                                <button class="btn btn-primary" onclick="enrollCourse(${course.id})">Enroll</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                coursesList.insertAdjacentHTML('beforeend', courseCard);
+            });
+        } else {
+            coursesList.innerHTML = '<p class="text-muted">No courses found.</p>';
+        }
+    } catch (error) {
+        console.error('Error loading courses:', error);
+        document.getElementById('coursesList').innerHTML = '<p class="text-danger">Error loading courses</p>';
+    }
+}
+
+function enrollCourse(courseId) {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        alert('Please login to enroll in courses');
+        window.location.href = '/login';
+        return;
+    }
+    alert('Enrolled in course ' + courseId);
+}
+
+document.addEventListener('DOMContentLoaded', loadCourses);
+</script>
+{% endblock %}
