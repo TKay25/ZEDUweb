@@ -137,6 +137,39 @@
         width: 100%;
     }
     
+    /* WhatsApp Input Group */
+    .whatsapp-input-group {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .whatsapp-country-select {
+        flex: 0 0 120px;
+    }
+    
+    .whatsapp-country-select .form-select {
+        height: 51px;
+        padding: 14px 12px;
+    }
+    
+    .whatsapp-number-input {
+        flex: 1;
+    }
+    
+    .whatsapp-number-input .form-control {
+        height: 51px;
+    }
+    
+    .whatsapp-hint {
+        font-size: 0.85rem;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #666;
+    }
+    
     /* Checkbox and Terms */
     .terms-section {
         margin: 30px 0;
@@ -339,6 +372,55 @@
                         >
                     </div>
                     
+                    <!-- WhatsApp Number -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fab fa-whatsapp me-2" style="color: #25d366;"></i>WhatsApp Number
+                        </label>
+                        <div class="whatsapp-input-group">
+                            <div class="whatsapp-country-select">
+                                <select class="form-select" id="countryCode" required>
+                                    <option value="">Country</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+91">🇮🇳 +91</option>
+                                    <option value="+92">🇵🇰 +92</option>
+                                    <option value="+234">🇳🇬 +234</option>
+                                    <option value="+254">🇰🇪 +254</option>
+                                    <option value="+233">🇬🇭 +233</option>
+                                    <option value="+256">🇺🇬 +256</option>
+                                    <option value="+255">🇹🇿 +255</option>
+                                    <option value="+27">🇿🇦 +27</option>
+                                    <option value="+86">🇨🇳 +86</option>
+                                    <option value="+81">🇯🇵 +81</option>
+                                    <option value="+60">🇲🇾 +60</option>
+                                    <option value="+65">🇸🇬 +65</option>
+                                    <option value="+62">🇮🇩 +62</option>
+                                    <option value="+55">🇧🇷 +55</option>
+                                    <option value="+52">🇲🇽 +52</option>
+                                    <option value="+34">🇪🇸 +34</option>
+                                    <option value="+33">🇫🇷 +33</option>
+                                    <option value="+49">🇩🇪 +49</option>
+                                    <option value="+39">🇮🇹 +39</option>
+                                    <option value="+506">🇨🇷 +506</option>
+                                    <option value="+595">🇵🇾 +595</option>
+                                </select>
+                            </div>
+                            <div class="whatsapp-number-input">
+                                <input 
+                                    type="tel" 
+                                    class="form-control" 
+                                    id="whatsappNumber" 
+                                    placeholder="7XXXXXXXX" 
+                                    required
+                                >
+                            </div>
+                        </div>
+                        <small class="whatsapp-hint">
+                            <i class="fas fa-info-circle"></i> Helps us contact you on WhatsApp
+                        </small>
+                    </div>
+                    
                     <!-- User Type -->
                     <div class="mb-3">
                         <label for="userType" class="form-label">
@@ -417,6 +499,8 @@
         const errorAlert = document.getElementById('errorAlert');
         const pwd = document.getElementById('password').value;
         const confirm = document.getElementById('confirmPassword').value;
+        const countryCode = document.getElementById('countryCode').value;
+        const whatsappNumber = document.getElementById('whatsappNumber').value;
         
         // Clear previous error
         errorAlert.classList.remove('show');
@@ -435,17 +519,32 @@
             return;
         }
         
+        // Validate WhatsApp fields
+        if (!countryCode) {
+            errorAlert.textContent = '❌ Please select a country code.';
+            errorAlert.classList.add('show');
+            return;
+        }
+        
+        if (!whatsappNumber || whatsappNumber.length < 7) {
+            errorAlert.textContent = '❌ Please enter a valid WhatsApp number.';
+            errorAlert.classList.add('show');
+            return;
+        }
+        
         // Show loading state
         btn.classList.add('loading');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating account...';
         
         try {
+            const fullWhatsAppNumber = countryCode + whatsappNumber;
             const result = await apiCall('/auth/register', 'POST', {
                 email: document.getElementById('email').value,
                 password: pwd,
                 first_name: document.getElementById('firstName').value,
                 last_name: document.getElementById('lastName').value,
-                user_type: document.getElementById('userType').value
+                user_type: document.getElementById('userType').value,
+                whatsapp_number: fullWhatsAppNumber
             });
             
             if (result.user) {
