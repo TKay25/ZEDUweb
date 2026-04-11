@@ -22,6 +22,7 @@ def register():
         first_name=data.get("first_name", ""),
         last_name=data.get("last_name", ""),
         phone=data.get("phone"),
+        whatsapp_number=data.get("whatsapp_number"),
         user_type=data.get("user_type", "student")
     )
     user.set_password(data["password"])

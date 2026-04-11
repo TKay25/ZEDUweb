@@ -17,6 +17,7 @@ class User(db.Model):
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20))
+    whatsapp_number = db.Column(db.String(20))
     avatar_url = db.Column(db.String(500))
     bio = db.Column(db.Text)
     user_type = db.Column(db.String(20), nullable=False)
@@ -44,6 +45,7 @@ class User(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "phone": self.phone,
+            "whatsapp_number": self.whatsapp_number,
             "avatar_url": self.avatar_url,
             "user_type": self.user_type,
             "is_active": self.is_active,
