@@ -10,23 +10,16 @@ class Config:
     FLASK_ENV = os.getenv("FLASK_ENV", "development")
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-key-change-in-production")
     
-    # Database - Read from DATABASE_URL environment variable
-    # Render provides this automatically for PostgreSQL databases
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
-    if not SQLALCHEMY_DATABASE_URI:
-        # Only use localhost default in development
-        if FLASK_ENV == "development":
-            SQLALCHEMY_DATABASE_URI = "postgresql://user:password@localhost:5432/zedu"
-        else:
-            raise ValueError(
-                "DATABASE_URL environment variable is not set. "
-                "On Render, this should be automatically set for PostgreSQL databases."
-            )
+    # Database - Use Render PostgreSQL by default
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        "DATABASE_URL",
+        "postgresql://zeduweb_user:qdEe6bfJmlIHAknO2TVbum3SSm2kFvFV@dpg-d7cklfa8qa3s73e9podg-a.oregon-postgres.render.com/zeduweb"
+    )
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # JWT
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwt-key-change-in-production")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-jwt-key-change-in-production")
     JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
