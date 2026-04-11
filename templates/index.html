@@ -4,190 +4,373 @@
 
 {% block extra_css %}
 <style>
+    /* Color Scheme */
+    :root {
+        --deep-blue: #001f5c;
+        --blue-dark: #003d9a;
+        --blue-accent: #0066cc;
+        --light-bg: #f8f9fc;
+    }
+
     /* Hero Section */
     .hero {
-        background: linear-gradient(135deg, #0d6efd 0%, #0043b0 50%, #001f5c 100%);
+        background: linear-gradient(135deg, var(--deep-blue) 0%, var(--blue-dark) 50%, #0a1f4d 100%);
         color: white;
-        padding: 100px 0;
+        padding: 120px 0;
         position: relative;
         overflow: hidden;
     }
+    
     .hero::before {
         content: '';
         position: absolute;
-        top: 0;
-        right: 0;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.1);
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(0, 102, 204, 0.15) 0%, transparent 70%);
         border-radius: 50%;
-        transform: translate(100px, -50px);
     }
+    
     .hero::after {
         content: '';
         position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 400px;
-        height: 400px;
-        background: rgba(255, 255, 255, 0.05);
+        bottom: -20%;
+        left: -5%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(0, 61, 154, 0.2) 0%, transparent 70%);
         border-radius: 50%;
-        transform: translate(-100px, 50px);
     }
+    
     .hero-content {
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
+    
     .hero h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-        margin-bottom: 20px;
-        line-height: 1.2;
-        letter-spacing: -1px;
+        font-size: 3.8rem;
+        font-weight: 900;
+        margin-bottom: 25px;
+        line-height: 1.15;
+        letter-spacing: -1.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
+    
     .hero-subtitle {
-        font-size: 1.3rem;
-        margin-bottom: 40px;
-        opacity: 0.95;
+        font-size: 1.35rem;
+        margin-bottom: 50px;
+        opacity: 0.98;
         font-weight: 300;
-    }
-    .hero .btn {
-        padding: 12px 30px;
-        font-weight: 600;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        margin-right: 15px;
-        margin-bottom: 10px;
-    }
-    .btn-light {
-        background: white;
-        color: #0d6efd;
-    }
-    .btn-light:hover {
-        background: #f0f0f0;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    }
-    .btn-outline-light {
-        border: 2px solid white;
-        color: white;
-    }
-    .btn-outline-light:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
-    .hero-icon {
-        font-size: 150px;
-        opacity: 0.15;
-        position: absolute;
-        bottom: -30px;
-        right: -30px;
-    }
-
-    /* Features Section */
-    .features {
-        padding: 80px 0;
-        background: #f8f9fa;
-    }
-    .section-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 60px;
-        text-align: center;
-        color: #1a1a1a;
-    }
-    .feature-card {
-        border: 0;
-        border-radius: 12px;
-        padding: 40px 30px;
-        transition: all 0.3s ease;
-        height: 100%;
-        background: white;
-        text-align: center;
-    }
-    .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-    .feature-icon {
-        font-size: 48px;
-        margin-bottom: 20px;
-        display: inline-block;
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #0d6efd, #0043b0);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-    }
-    .feature-card h5 {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin: 20px 0;
-        color: #1a1a1a;
-    }
-    .feature-card p {
-        color: #666;
         line-height: 1.6;
-        font-size: 0.95rem;
+        max-width: 550px;
+    }
+    
+    .hero-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .hero .btn {
+        padding: 14px 35px;
+        font-weight: 700;
+        border-radius: 10px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        font-size: 1.05rem;
+        border: none;
+    }
+    
+    .btn-primary-light {
+        background: white;
+        color: var(--deep-blue);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-primary-light:hover {
+        background: #f0f0f0;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn-outline-light {
+        border: 2.5px solid white;
+        color: white;
+        background: transparent;
+    }
+    
+    .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .hero-visual {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .hero-visual-box {
+        padding: 60px 30px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    .hero-visual-box i {
+        font-size: 120px;
+        color: rgba(255, 255, 255, 0.2);
     }
 
     /* Stats Section */
     .stats {
-        padding: 60px 0;
-        background: white;
+        padding: 80px 0;
+        background: var(--light-bg);
     }
+    
     .stat-item {
         text-align: center;
-        padding: 20px;
+        padding: 40px 20px;
+        transition: all 0.3s ease;
     }
+    
+    .stat-item:hover {
+        transform: translateY(-5px);
+    }
+    
     .stat-number {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #0d6efd;
+        font-size: 2.8rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--blue-dark), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         display: block;
+        margin-bottom: 10px;
     }
+    
     .stat-label {
+        color: #555;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    /* Section Title */
+    .section-title {
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 70px;
+        text-align: center;
+        color: var(--deep-blue);
+        letter-spacing: -1px;
+    }
+    
+    .section-subtitle {
+        text-align: center;
         color: #666;
+        font-size: 1.15rem;
+        margin-bottom: 50px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Features Section */
+    .features {
+        padding: 100px 0;
+        background: white;
+    }
+    
+    .feature-card {
+        border: 0;
+        border-radius: 15px;
+        padding: 45px 35px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 100%;
+        background: white;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--blue-dark), var(--blue-accent));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+    }
+    
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 50px rgba(0, 31, 92, 0.15);
+    }
+    
+    .feature-icon {
+        font-size: 50px;
+        margin-bottom: 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, var(--blue-dark), var(--blue-accent));
+        border-radius: 16px;
+        color: white;
+        box-shadow: 0 8px 20px rgba(0, 61, 154, 0.25);
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 12px 30px rgba(0, 61, 154, 0.35);
+    }
+    
+    .feature-card h5 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 25px 0 15px 0;
+        color: var(--deep-blue);
+    }
+    
+    .feature-card p {
+        color: #666;
+        line-height: 1.7;
+        font-size: 0.98rem;
+        font-weight: 500;
+    }
+
+    /* Benefits Section */
+    .benefits {
+        padding: 100px 0;
+        background: linear-gradient(135deg, var(--deep-blue) 0%, var(--blue-dark) 100%);
+        color: white;
+    }
+    
+    .benefit-item {
+        display: flex;
+        gap: 25px;
+        margin-bottom: 35px;
+        align-items: flex-start;
+    }
+    
+    .benefit-icon {
+        font-size: 2rem;
+        color: var(--blue-accent);
+        flex-shrink: 0;
+    }
+    
+    .benefit-text h4 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+    
+    .benefit-text p {
+        color: rgba(255, 255, 255, 0.9);
         font-size: 0.95rem;
-        margin-top: 5px;
+        line-height: 1.6;
     }
 
     /* CTA Section */
     .cta-section {
-        background: linear-gradient(135deg, #0d6efd 0%, #0043b0 100%);
+        background: linear-gradient(135deg, var(--blue-accent) 0%, var(--blue-dark) 50%, var(--deep-blue) 100%);
         color: white;
-        padding: 80px 0;
+        padding: 100px 0;
         text-align: center;
+        position: relative;
+        overflow: hidden;
     }
+    
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    
+    .cta-content {
+        position: relative;
+        z-index: 2;
+    }
+    
     .cta-section h2 {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 30px;
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 20px;
+        letter-spacing: -1px;
     }
+    
     .cta-section p {
-        font-size: 1.1rem;
-        margin-bottom: 40px;
+        font-size: 1.25rem;
+        margin-bottom: 50px;
         opacity: 0.95;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        font-weight: 300;
     }
-    .cta-section .btn {
-        padding: 15px 40px;
-        font-size: 1.05rem;
-        font-weight: 600;
+    
+    .cta-btn {
+        padding: 16px 45px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        background: white;
+        color: var(--deep-blue);
+        border: none;
+        border-radius: 10px;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cta-btn:hover {
+        background: #f0f0f0;
+        transform: translateY(-4px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
     }
 
     /* Responsive */
     @media (max-width: 768px) {
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
         }
         .hero-subtitle {
             font-size: 1.1rem;
         }
         .section-title {
-            font-size: 2rem;
+            font-size: 2.2rem;
+        }
+        .cta-section h2 {
+            font-size: 2.2rem;
+        }
+        .hero-buttons {
+            flex-direction: column;
+        }
+        .hero .btn {
+            width: 100%;
+            text-align: center;
         }
     }
 </style>
@@ -199,23 +382,20 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 hero-content">
-                <h1>Transform Your Learning Journey</h1>
-                <p class="hero-subtitle">Connect with expert tutors, master new skills, and achieve your educational goals on your own schedule.</p>
-                <div>
-                    <a href="/courses" class="btn btn-light btn-lg">
-                        <i class="fas fa-book me-2"></i>Explore Courses
+                <h1>Transform Your Learning Today</h1>
+                <p class="hero-subtitle">Expert tutors, thousands of courses, and AI-powered learning paths—all designed to help you succeed.</p>
+                <div class="hero-buttons">
+                    <a href="/courses" class="btn btn-primary-light">
+                        <i class="fas fa-compass me-2"></i>Explore Courses
                     </a>
-                    <a href="/tutors" class="btn btn-outline-light btn-lg">
+                    <a href="/tutors" class="btn btn-outline-light">
                         <i class="fas fa-chalkboard-user me-2"></i>Find Tutors
                     </a>
                 </div>
             </div>
-            <div class="col-lg-6 text-center position-relative">
-                <div class="hero-icon">
+            <div class="col-lg-6 hero-visual text-center">
+                <div class="hero-visual-box">
                     <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div style="padding: 40px; background: rgba(255,255,255,0.1); border-radius: 16px; backdrop-filter: blur(10px);">
-                    <i class="fas fa-laptop fa-5x" style="color: rgba(255,255,255,0.3);"></i>
                 </div>
             </div>
         </div>
@@ -228,15 +408,15 @@
         <div class="row">
             <div class="col-md-4 stat-item">
                 <span class="stat-number">500+</span>
-                <span class="stat-label">Expert Tutors</span>
+                <span class="stat-label">VERIFIED TUTORS</span>
             </div>
             <div class="col-md-4 stat-item">
-                <span class="stat-number">2000+</span>
-                <span class="stat-label">Courses Available</span>
+                <span class="stat-number">2,000+</span>
+                <span class="stat-label">QUALITY COURSES</span>
             </div>
             <div class="col-md-4 stat-item">
                 <span class="stat-number">50K+</span>
-                <span class="stat-label">Active Learners</span>
+                <span class="stat-label">ACTIVE LEARNERS</span>
             </div>
         </div>
     </div>
@@ -245,15 +425,16 @@
 <!-- Features Section -->
 <section class="features">
     <div class="container">
-        <h2 class="section-title">Why Choose ZEDU?</h2>
+        <h2 class="section-title">Why ZEDU Stands Out</h2>
+        <p class="section-subtitle">Everything you need for a world-class learning experience</p>
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="card feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-book"></i>
                     </div>
-                    <h5>Diverse Courses</h5>
-                    <p>Access thousands of courses across Mathematics, Science, Languages, and more—all taught by verified experts.</p>
+                    <h5>Comprehensive Courses</h5>
+                    <p>Explore diverse subjects from STEM to languages, all created by industry experts and continuously updated.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
@@ -261,8 +442,8 @@
                     <div class="feature-icon">
                         <i class="fas fa-video"></i>
                     </div>
-                    <h5>Live Tutoring</h5>
-                    <p>Get real-time help from tutors through interactive video sessions tailored to your learning pace and goals.</p>
+                    <h5>Live 1-on-1 Sessions</h5>
+                    <p>Connect directly with expert tutors in real-time for personalized guidance and immediate support.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
@@ -270,8 +451,8 @@
                     <div class="feature-icon">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <h5>AI-Powered Learning</h5>
-                    <p>Receive personalized recommendations and progress predictions powered by advanced AI technology.</p>
+                    <h5>AI-Powered Insights</h5>
+                    <p>Get intelligent recommendations and performance analytics that adapt to your unique learning style.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
@@ -279,8 +460,8 @@
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h5>Track Progress</h5>
-                    <p>Monitor your learning with detailed analytics, performance insights, and achievement milestones.</p>
+                    <h5>Progress Tracking</h5>
+                    <p>Monitor your advancement with detailed analytics, certificates, and achievement milestones.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
@@ -288,17 +469,72 @@
                     <div class="feature-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h5>Community</h5>
-                    <p>Join thousands of students, share knowledge, collaborate on projects, and grow together.</p>
+                    <h5>Collaborative Community</h5>
+                    <p>Learn alongside thousands of motivated students, share ideas, and grow through peer networks.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-infinity"></i>
                     </div>
-                    <h5>Learn Anytime</h5>
-                    <p>Study at your own pace with flexible scheduling—access courses and materials whenever you want.</p>
+                    <h5>Lifetime Access</h5>
+                    <p>Study whenever, wherever. Access all your courses anytime with lifetime learning resources.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="benefits">
+    <div class="container">
+        <h2 class="section-title" style="color: white; margin-bottom: 60px;">The ZEDU Advantage</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="benefit-text">
+                        <h4>Verified Experts</h4>
+                        <p>All tutors are thoroughly vetted with proven track records and subject matter expertise.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="benefit-text">
+                        <h4>Flexible Learning</h4>
+                        <p>Learn at your own pace with courses available 24/7 and tutors across all time zones.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="benefit-text">
+                        <h4>Affordable Pricing</h4>
+                        <p>High-quality education without the premium price tag. We make learning accessible to everyone.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="benefit-text">
+                        <h4>Personalized Paths</h4>
+                        <p>AI algorithms customize your learning journey based on your goals and learning style.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="benefit-text">
+                        <h4>Certificate Program</h4>
+                        <p>Earn recognized certificates upon completion to showcase your skills to employers.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="benefit-text">
+                        <h4>24/7 Support</h4>
+                        <p>Get help whenever you need it with our dedicated support team always available.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -307,11 +543,11 @@
 
 <!-- CTA Section -->
 <section class="cta-section">
-    <div class="container text-center">
-        <h2>Ready to Start Your Learning Journey?</h2>
-        <p>Join thousands of students who are already transforming their futures with ZEDU.</p>
-        <a href="/register" class="btn btn-light btn-lg">
-            <i class="fas fa-rocket me-2"></i>Get Started Now
+    <div class="container cta-content">
+        <h2>Start Your Success Story</h2>
+        <p>Join thousands of learners transforming their futures with ZEDU. Your success starts now.</p>
+        <a href="/register" class="btn cta-btn">
+            <i class="fas fa-rocket me-2"></i>Begin Your Journey
         </a>
     </div>
 </section>
