@@ -62,37 +62,37 @@ const Modal: React.FC<ModalProps> = ({
       >
         <Transition.Child
           as={Fragment}
-          enter="ease-out duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-200"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+          enter="ease-out duration-400"
+          enterFrom="opacity-0 backdrop-blur-0"
+          enterTo="opacity-100 backdrop-blur-md"
+          leave="ease-in duration-300"
+          leaveFrom="opacity-100 backdrop-blur-md"
+          leaveTo="opacity-0 backdrop-blur-0"
         >
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-md transition-all" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Transition.Child
               as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
+              enter="ease-out duration-400"
+              enterFrom="opacity-0 scale-90 blur-sm"
+              enterTo="opacity-100 scale-100 blur-none"
+              leave="ease-in duration-300"
+              leaveFrom="opacity-100 scale-100 blur-none"
+              leaveTo="opacity-0 scale-90 blur-sm"
             >
               <Dialog.Panel
                 className={`
                   w-full ${sizeClasses[size]} transform overflow-hidden rounded-2xl
-                  bg-white dark:bg-gray-800 text-left align-middle shadow-xl
+                  bg-white dark:bg-gray-800 text-left align-middle shadow-2xl
                   transition-all ${className}
                 `}
               >
                 {/* Header */}
                 {(title || showCloseButton) && (
-                  <div className="flex items-start justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-start justify-between p-6 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-r from-white to-blue-50 dark:from-gray-800 dark:to-gray-800/50">
                     <div>
                       {title && (
                         <Dialog.Title
@@ -103,7 +103,7 @@ const Modal: React.FC<ModalProps> = ({
                         </Dialog.Title>
                       )}
                       {description && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                           {description}
                         </p>
                       )}
@@ -111,7 +111,7 @@ const Modal: React.FC<ModalProps> = ({
                     {showCloseButton && (
                       <button
                         onClick={onClose}
-                        className="rounded-lg p-1 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="rounded-lg p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

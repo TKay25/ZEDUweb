@@ -48,15 +48,15 @@ const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Form */}
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 bg-white">
+      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/30">
         <div className="max-w-md w-full mx-auto">
           {/* Logo */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 animate-fade-in">
             <Link to="/" className="inline-flex items-center space-x-2 group">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center transform group-hover:rotate-6 transition-all duration-300">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-600 rounded-xl flex items-center justify-center transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 shadow-lg group-hover:shadow-2xl group-hover:shadow-blue-500/50">
                 <span className="text-2xl text-white font-bold">Z</span>
               </div>
-              <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="text-3xl font-bold text-gradient">
                 EDU
               </span>
             </Link>
@@ -64,7 +64,7 @@ const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
 
           {/* Page Title (optional) */}
           {getPageTitle() && (
-            <h1 className="text-2xl font-bold text-center text-gray-900 mb-6">
+            <h1 className="text-3xl font-bold text-center text-gray-900 mb-2 animate-slide-up">
               {getPageTitle()}
             </h1>
           )}
@@ -75,18 +75,20 @@ const AuthLayout: React.FC<LayoutProps> = ({ children }) => {
           </div>
 
           {/* Footer links */}
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center animate-fade-in">
             <p className="text-sm text-gray-600">
               © {new Date().getFullYear()} ZEDU. All rights reserved.
             </p>
-            <div className="mt-2 space-x-4">
-              <Link to="/terms" className="text-xs text-gray-500 hover:text-gray-700">
+            <div className="mt-3 space-x-4 flex justify-center">
+              <Link to="/terms" className="text-xs text-gray-500 hover:text-blue-600 transition-colors duration-300 hover:font-semibold">
                 Terms
               </Link>
-              <Link to="/privacy" className="text-xs text-gray-500 hover:text-gray-700">
+              <span className="text-gray-300">•</span>
+              <Link to="/privacy" className="text-xs text-gray-500 hover:text-blue-600 transition-colors duration-300 hover:font-semibold">
                 Privacy
               </Link>
-              <Link to="/contact" className="text-xs text-gray-500 hover:text-gray-700">
+              <span className="text-gray-300">•</span>
+              <Link to="/contact" className="text-xs text-gray-500 hover:text-blue-600 transition-colors duration-300 hover:font-semibold">
                 Contact
               </Link>
             </div>

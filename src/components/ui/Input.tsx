@@ -58,10 +58,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
 
   // Variant classes
   const variantClasses = {
-    default: 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500',
-    filled: 'bg-gray-100 dark:bg-gray-700 border-transparent focus:bg-white dark:focus:bg-gray-600 focus:border-blue-500',
-    outline: 'bg-transparent border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500',
-    ghost: 'bg-transparent border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800'
+    default: 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 dark:focus:ring-blue-400/30 transition-all duration-250',
+    filled: 'bg-gray-100 dark:bg-gray-700 border border-transparent focus:bg-white dark:focus:bg-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all duration-250',
+    outline: 'bg-transparent border-2 border-blue-300 dark:border-blue-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 dark:focus:ring-blue-400/30 transition-all duration-250',
+    ghost: 'bg-transparent border border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition-all duration-250'
   };
 
   // Error classes

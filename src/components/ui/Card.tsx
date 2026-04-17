@@ -35,20 +35,20 @@ const Card = forwardRef<HTMLDivElement, LocalCardProps>(({
   ...props
 }, ref) => {
   const variantClasses = {
-    default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
-    elevated: 'bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300',
-    outlined: 'bg-transparent border-2 border-gray-200 dark:border-gray-700',
-    glass: 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-white/20 dark:border-gray-700/30',
+    default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow duration-300',
+    elevated: 'bg-white dark:bg-gray-800 shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700',
+    outlined: 'bg-gradient-to-br from-blue-50/50 to-indigo-50/30 dark:from-gray-900/50 dark:to-gray-800/50 border-2 border-blue-200 dark:border-blue-900/50 backdrop-blur-xs',
+    glass: 'bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/30 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300',
   };
 
   const paddingClasses = {
     none: '',
-    sm: 'p-3',
+    sm: 'p-4',
     md: 'p-6',
     lg: 'p-8',
   };
 
-  const hoverClasses = hoverable ? 'transform hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer' : '';
+  const hoverClasses = hoverable ? 'transform hover:scale-102 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer' : '';
 
   return (
     <div

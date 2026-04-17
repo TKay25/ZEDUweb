@@ -34,15 +34,15 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   // Use loading prop as alias for isLoading
   const isLoadingEffective = isLoading || loading || false;
   
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95';
+  const baseClasses = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95 hover:scale-105 relative overflow-hidden';
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 focus:ring-blue-500 shadow-lg hover:shadow-xl',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600',
-    outline: 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800',
-    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-300 dark:hover:bg-gray-800',
-    danger: 'bg-gradient-to-r from-red-600 to-pink-600 text-white hover:from-red-700 hover:to-pink-700 focus:ring-red-500 shadow-lg hover:shadow-xl',
-    success: 'bg-gradient-to-r from-green-600 to-teal-600 text-white hover:from-green-700 hover:to-teal-700 focus:ring-green-500 shadow-lg hover:shadow-xl',
+    primary: 'bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 focus:ring-blue-500 shadow-lg hover:shadow-2xl hover:shadow-blue-500/50',
+    secondary: 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-900 hover:from-gray-200 hover:to-gray-100 focus:ring-gray-500 shadow-md hover:shadow-lg dark:bg-gradient-to-r dark:from-gray-700 dark:to-gray-600 dark:text-gray-100 dark:hover:from-gray-600 dark:hover:to-gray-500',
+    outline: 'border-2 border-blue-300 text-blue-700 bg-blue-50/50 hover:bg-blue-100 hover:border-blue-400 focus:ring-blue-500 dark:border-blue-500 dark:text-blue-300 dark:bg-blue-950/30 dark:hover:bg-blue-900/50',
+    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500 dark:text-gray-300 dark:hover:bg-gray-800 hover:shadow-md',
+    danger: 'bg-gradient-to-r from-red-600 via-red-600 to-pink-600 text-white hover:from-red-700 hover:to-pink-700 focus:ring-red-500 shadow-lg hover:shadow-2xl hover:shadow-red-500/50',
+    success: 'bg-gradient-to-r from-green-600 via-green-600 to-teal-600 text-white hover:from-green-700 hover:to-teal-700 focus:ring-green-500 shadow-lg hover:shadow-2xl hover:shadow-green-500/50',
   };
 
   const sizeClasses = {

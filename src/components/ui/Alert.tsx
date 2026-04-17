@@ -26,26 +26,26 @@ const Alert: React.FC<AlertProps> = ({
 
   const variantClasses = {
     info: {
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'border-blue-200 dark:border-blue-800',
+      bg: 'bg-gradient-to-r from-blue-50 to-blue-25 dark:from-blue-900/40 dark:to-blue-800/20',
+      border: 'border border-blue-200 dark:border-blue-800/50',
       text: 'text-blue-800 dark:text-blue-200',
       icon: '🔵',
     },
     success: {
-      bg: 'bg-green-50 dark:bg-green-900/20',
-      border: 'border-green-200 dark:border-green-800',
+      bg: 'bg-gradient-to-r from-green-50 to-green-25 dark:from-green-900/40 dark:to-green-800/20',
+      border: 'border border-green-200 dark:border-green-800/50',
       text: 'text-green-800 dark:text-green-200',
       icon: '✅',
     },
     warning: {
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      border: 'border-yellow-200 dark:border-yellow-800',
+      bg: 'bg-gradient-to-r from-yellow-50 to-yellow-25 dark:from-yellow-900/40 dark:to-yellow-800/20',
+      border: 'border border-yellow-200 dark:border-yellow-800/50',
       text: 'text-yellow-800 dark:text-yellow-200',
       icon: '⚠️',
     },
     error: {
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800',
+      bg: 'bg-gradient-to-r from-red-50 to-red-25 dark:from-red-900/40 dark:to-red-800/20',
+      border: 'border border-red-200 dark:border-red-800/50',
       text: 'text-red-800 dark:text-red-200',
       icon: '❌',
     },

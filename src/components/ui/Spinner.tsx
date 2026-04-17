@@ -24,10 +24,10 @@ const Spinner: React.FC<SpinnerProps> = ({
   };
 
   const colorClasses = {
-    primary: 'border-blue-600 border-t-transparent',
-    secondary: 'border-purple-600 border-t-transparent',
-    white: 'border-white border-t-transparent',
-    gray: 'border-gray-400 border-t-transparent',
+    primary: 'border-gradient-to-r from-blue-600 to-indigo-600 border-t-transparent shadow-lg',
+    secondary: 'border-gradient-to-r from-purple-600 to-pink-600 border-t-transparent shadow-lg',
+    white: 'border-white border-t-white/20 shadow-lg shadow-white/20',
+    gray: 'border-gray-400 border-t-gray-200 shadow-lg shadow-gray-400/20',
   };
 
   return (

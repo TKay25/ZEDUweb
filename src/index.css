@@ -4,26 +4,87 @@
 
 @layer base {
   body {
-    @apply bg-gray-50;
+    @apply bg-gradient-to-br from-gray-50 via-white to-blue-50;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  * {
+    @apply transition-colors duration-300;
+  }
+
+  input, textarea, select {
+    @apply transition-all duration-300;
+  }
+
+  a {
+    @apply no-underline;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
   }
 }
-/* Simple CSS without any Tailwind 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+@layer components {
+  .btn-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300;
+  }
+
+  .card-glass {
+    @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/20 dark:border-gray-700/20 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300;
+  }
+
+  .input-focus {
+    @apply focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-250;
+  }
+
+  .fade-in-up {
+    @apply animate-fade-in animate-slide-up;
+  }
+
+  .hover-lift {
+    @apply hover:-translate-y-1 transition-transform duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent;
+  }
+
+  .shimmer-loading {
+    @apply animate-shimmer bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:1000px_100%];
+  }
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f2f5;
-}
+@layer utilities {
+  .scale-102 {
+    @apply scale-[1.02];
+  }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
+  .scroll-smooth-custom {
+    scroll-behavior: smooth;
+  }
+
+  .shadow-blue-glow {
+    @apply shadow-xl shadow-blue-500/20;
+  }
+
+  .shadow-indigo-glow {
+    @apply shadow-xl shadow-indigo-500/20;
+  }
+
+  .border-gradient {
+    background-image: linear-gradient(white, white), 
+                      linear-gradient(to right, rgb(59, 130, 246), rgb(99, 102, 241));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+}

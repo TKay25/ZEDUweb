@@ -34,12 +34,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   };
 
   const colorClasses = {
-    blue: 'bg-blue-600',
-    green: 'bg-green-600',
-    red: 'bg-red-600',
-    yellow: 'bg-yellow-600',
-    purple: 'bg-purple-600',
-    indigo: 'bg-indigo-600',
+    blue: 'bg-gradient-to-r from-blue-600 to-blue-500 shadow-lg shadow-blue-500/30',
+    green: 'bg-gradient-to-r from-green-600 to-green-500 shadow-lg shadow-green-500/30',
+    red: 'bg-gradient-to-r from-red-600 to-red-500 shadow-lg shadow-red-500/30',
+    yellow: 'bg-gradient-to-r from-yellow-600 to-yellow-500 shadow-lg shadow-yellow-500/30',
+    purple: 'bg-gradient-to-r from-purple-600 to-purple-500 shadow-lg shadow-purple-500/30',
+    indigo: 'bg-gradient-to-r from-indigo-600 to-indigo-500 shadow-lg shadow-indigo-500/30',
   };
 
   const labelColors = {
@@ -52,7 +52,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   };
 
   const stripedStyles = striped
-    ? 'bg-gradient-to-r from-transparent via-white/25 to-transparent bg-[length:1rem_1rem] animate-progress-stripes'
+    ? 'bg-gradient-to-r from-transparent via-white/25 to-transparent bg-[length:1rem_1rem] animate-shimmer'
     : '';
 
   return (

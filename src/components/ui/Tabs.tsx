@@ -60,41 +60,41 @@ const Tabs: TabsComponent = ({
     default: {
       container: 'border-b border-gray-200 dark:border-gray-700',
       tab: (isActive: boolean, isDisabled: boolean) => `
-        px-4 py-2 text-sm font-medium
+        px-4 py-2 text-sm font-semibold
         ${isActive 
-          ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 -mb-px' 
-          : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+          ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 -mb-px shadow-blue-glow' 
+          : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
         }
         ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-        transition-colors duration-200
+        transition-all duration-300 hover:-translate-y-0.5
       `,
     },
     pills: {
-      container: 'flex space-x-2',
+      container: 'flex space-x-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl',
       tab: (isActive: boolean, isDisabled: boolean) => `
-        px-4 py-2 text-sm font-medium rounded-lg
+        px-4 py-2 text-sm font-semibold rounded-lg
         ${isActive 
-          ? 'bg-blue-600 text-white' 
-          : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300'
+          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30' 
+          : 'text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400'
         }
         ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-        transition-all duration-200
+        transition-all duration-300 transform hover:scale-105
       `,
     },
     underline: {
-      container: 'border-b border-gray-200 dark:border-gray-700',
+      container: 'border-b-2 border-gray-200 dark:border-gray-700',
       tab: (isActive: boolean, isDisabled: boolean) => `
-        px-4 py-2 text-sm font-medium relative
+        px-4 py-3 text-sm font-semibold relative
         ${isActive 
           ? 'text-blue-600 dark:text-blue-400' 
-          : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+          : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
         }
         ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-        transition-colors duration-200
-        after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5
-        after:bg-blue-600 dark:after:bg-blue-400
-        after:transform after:scale-x-0 after:transition-transform after:duration-200
-        ${isActive ? 'after:scale-x-100' : ''}
+        transition-colors duration-300
+        after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-1
+        after:bg-gradient-to-r after:from-blue-600 after:to-indigo-600
+        after:transform after:scale-x-0 after:origin-left after:transition-transform after:duration-300
+        ${isActive ? 'after:scale-x-100' : 'hover:after:scale-x-50'}
       `,
     },
   };
