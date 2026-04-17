@@ -488,7 +488,21 @@ function renderStatCards(userType, userId) {
 
 async function fetchTutorStats(tutorId, statsGrid) {
     try {
+        console.log('Fetching stats for tutor ID:', tutorId);
+        
+        if (!tutorId) {
+            console.error('Tutor ID is undefined or null');
+            statsGrid.innerHTML = '<div class="stat-card"><p style="color: red;">Error: User ID not found</p></div>';
+            return;
+        }
+        
         const token = localStorage.getItem('access_token');
+        if (!token) {
+            console.error('No authentication token found');
+            statsGrid.innerHTML = '<div class="stat-card"><p style="color: red;">Error: Authentication required</p></div>';
+            return;
+        }
+        
         const response = await fetch(`/api/tutors/${tutorId}/dashboard/stats`, {
             method: 'GET',
             headers: {
@@ -497,9 +511,16 @@ async function fetchTutorStats(tutorId, statsGrid) {
             }
         });
         
-        if (!response.ok) throw new Error('Failed to fetch stats');
+        console.log('Stats response status:', response.status);
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API Error:', errorData);
+            throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+        }
         
         const result = await response.json();
+        console.log('Stats data received:', result);
         const stats = result.stats;
         
         let statsHTML = `
@@ -543,8 +564,9 @@ async function fetchTutorStats(tutorId, statsGrid) {
         
         statsGrid.innerHTML = statsHTML;
     } catch (error) {
-        console.error('Error fetching tutor stats:', error);
-        statsGrid.innerHTML = '<div class="stat-card"><p style="color: red;">Failed to load stats</p></div>';
+        console.error('Error fetching tutor stats:', error.message || error);
+        const errorMsg = error.message || 'Failed to load stats';
+        statsGrid.innerHTML = `<div class="stat-card"><p style="color: red; font-size: 12px;">Error: ${errorMsg}</p></div>`;
     }
 }
 

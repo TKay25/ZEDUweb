@@ -32,14 +32,15 @@ def get_dashboard_stats(tutor_id):
             if not tutor:
                 return {"message": f"Tutor not found for ID: {tutor_id}"}, 404
         
-        # Total students (count unique students in enrollments)
-        total_students = db.session.query(func.count(func.distinct(CourseEnrollment.student_id))).filter(
-            Course.tutor_id == tutor.id,
-            CourseEnrollment.course_id == Course.id
-        ).scalar() or 0
-        
         # Active courses
         active_courses = Course.query.filter_by(tutor_id=tutor.id).count()
+        
+        # Total students (count unique students in enrollments for this tutor's courses)
+        total_students = db.session.query(func.count(func.distinct(CourseEnrollment.student_id))).join(
+            Course, CourseEnrollment.course_id == Course.id
+        ).filter(
+            Course.tutor_id == tutor.id
+        ).scalar() or 0
         
         # Total earnings (completed and pending)
         total_earnings = db.session.query(func.sum(TutorEarnings.amount)).filter(
@@ -53,23 +54,26 @@ def get_dashboard_stats(tutor_id):
         ).scalar() or 0
         
         # Average rating
-        avg_rating = db.session.query(func.avg(CourseReview.rating)).filter(
-            Course.tutor_id == tutor.id,
-            CourseReview.course_id == Course.id
+        avg_rating = db.session.query(func.avg(CourseReview.rating)).join(
+            Course, CourseReview.course_id == Course.id
+        ).filter(
+            Course.tutor_id == tutor.id
         ).scalar() or 0
         
         avg_rating = round(float(avg_rating), 1) if avg_rating else 0
         
         # Total reviews
-        total_reviews = db.session.query(func.count(CourseReview.id)).filter(
-            Course.tutor_id == tutor.id,
-            CourseReview.course_id == Course.id
+        total_reviews = db.session.query(func.count(CourseReview.id)).join(
+            Course, CourseReview.course_id == Course.id
+        ).filter(
+            Course.tutor_id == tutor.id
         ).scalar() or 0
         
         # Completion rate (average from all courses)
-        completion_rate = db.session.query(func.avg(CourseEnrollment.progress)).filter(
-            Course.tutor_id == tutor.id,
-            CourseEnrollment.course_id == Course.id
+        completion_rate = db.session.query(func.avg(CourseEnrollment.progress)).join(
+            Course, CourseEnrollment.course_id == Course.id
+        ).filter(
+            Course.tutor_id == tutor.id
         ).scalar() or 0
         
         completion_rate = round(float(completion_rate), 1) if completion_rate else 0
