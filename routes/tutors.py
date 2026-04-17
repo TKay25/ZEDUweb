@@ -244,11 +244,7 @@ def get_earnings(tutor_id):
 @jwt_required()
 def get_tutor(tutor_id):
     """Get tutor by ID"""
-    from uuid import UUID as PyUUID
     try:
-        # Convert string to UUID if needed
-        if isinstance(tutor_id, str):
-            tutor_id = PyUUID(tutor_id)
         tutor = Tutor.query.filter_by(id=tutor_id).first()
         if not tutor:
             return {"message": "Tutor not found"}, 404
@@ -261,23 +257,24 @@ def get_tutor(tutor_id):
 @jwt_required()
 def create_tutor():
     """Create tutor record"""
-    from uuid import UUID as PyUUID
     data = request.get_json()
     
     try:
-        # Convert user_id to proper UUID format if it's a string
-        user_id = data.get("user_id")
-        if isinstance(user_id, str):
-            user_id = PyUUID(user_id)
-        
         tutor = Tutor(
-            user_id=user_id,
+            user_id=data.get("user_id"),  # Pass as string, SQLAlchemy will convert
             specializations=data.get("specializations", []),
             experience_years=data.get("experience_years", 0),
             hourly_rate=data.get("hourly_rate", 0)
         )
         db.session.add(tutor)
+        db.session.flush()  # Flush to ensure it's in the session
         db.session.commit()
+        
+        # Verify it was created
+        created_tutor = Tutor.query.filter_by(id=tutor.id).first()
+        if not created_tutor:
+            return {"message": "Tutor created but verification failed"}, 500
+            
         return {"message": "Tutor created", "tutor": tutor.to_dict()}, 201
     except Exception as e:
         db.session.rollback()

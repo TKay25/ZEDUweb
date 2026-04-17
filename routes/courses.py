@@ -26,23 +26,18 @@ def get_course(course_id):
 @jwt_required()
 def create_course():
     """Create course"""
-    from uuid import UUID as PyUUID
     data = request.get_json()
     
     try:
-        # Convert tutor_id to proper UUID format if it's a string
-        tutor_id = data.get("tutor_id")
-        if isinstance(tutor_id, str):
-            tutor_id = PyUUID(tutor_id)
-        
         course = Course(
             title=data.get("title"),
             description=data.get("description"),
-            tutor_id=tutor_id,
+            tutor_id=data.get("tutor_id"),  # Pass as string, SQLAlchemy will convert
             subject=data.get("subject"),
             level=data.get("level")
         )
         db.session.add(course)
+        db.session.flush()  # Flush to ensure consistency
         db.session.commit()
         return {"message": "Course created", "course": course.to_dict()}, 201
     except Exception as e:
