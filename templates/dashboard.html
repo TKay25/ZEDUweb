@@ -581,8 +581,8 @@ function renderQuickActions(userType) {
             { icon: 'fa-user-edit', label: 'Edit Profile', href: '/profile' }
         ],
         tutor: [
-            { icon: 'fa-book-plus', label: 'Create Course', href: '/courses/new' },
-            { icon: 'fa-video', label: 'Start Session', href: '/sessions/new' },
+            { icon: 'fa-book-plus', label: 'Create Course', action: 'openCreateCourseModal' },
+            { icon: 'fa-video', label: 'Record Session', action: 'openRecordSessionModal' },
             { icon: 'fa-user-edit', label: 'Edit Profile', href: '/profile' }
         ],
         parent: [
@@ -595,12 +595,21 @@ function renderQuickActions(userType) {
     const quickActions = actions[userType] || actions.student;
     
     quickActions.forEach((action, index) => {
-        actionsHTML += `
-            <a href="${action.href}" class="action-btn" style="animation-delay: ${0.1 + index * 0.1}s;">
-                <i class="fas ${action.icon}"></i>
-                <span>${action.label}</span>
-            </a>
-        `;
+        if (action.action) {
+            actionsHTML += `
+                <button class="action-btn" onclick="${action.action}()" style="animation-delay: ${0.1 + index * 0.1}s;">
+                    <i class="fas ${action.icon}"></i>
+                    <span>${action.label}</span>
+                </button>
+            `;
+        } else {
+            actionsHTML += `
+                <a href="${action.href}" class="action-btn" style="animation-delay: ${0.1 + index * 0.1}s;">
+                    <i class="fas ${action.icon}"></i>
+                    <span>${action.label}</span>
+                </a>
+            `;
+        }
     });
     
     actionsGrid.innerHTML = actionsHTML;
@@ -715,5 +724,446 @@ async function renderTutorCourses(tutorId) {
         console.error('Error rendering tutor courses:', error);
     }
 }
+
+// Course creation modal functions
+let currentTutorId = null;
+
+function openCreateCourseModal() {
+    const modal = document.getElementById('createCourseModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeCreateCourseModal() {
+    const modal = document.getElementById('createCourseModal');
+    if (modal) modal.style.display = 'none';
+}
+
+async function createCourse() {
+    const title = document.getElementById('courseTitle').value;
+    const description = document.getElementById('courseDescription').value;
+    const subject = document.getElementById('courseSubject').value;
+    const level = document.getElementById('courseLevel').value;
+    
+    if (!title || !description || !subject || !level) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch('/api/courses', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                description: description,
+                tutor_id: currentTutorId,
+                subject: subject,
+                level: level
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to create course');
+        }
+        
+        const result = await response.json();
+        alert(`Course "${result.course.title}" created successfully!`);
+        
+        // Reset form and close modal
+        document.getElementById('createCourseForm').reset();
+        closeCreateCourseModal();
+        
+    } catch (error) {
+        console.error('Error creating course:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+// Session recording modal functions
+function openRecordSessionModal() {
+    const modal = document.getElementById('recordSessionModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeRecordSessionModal() {
+    const modal = document.getElementById('recordSessionModal');
+    if (modal) modal.style.display = 'none';
+}
+
+async function recordSession() {
+    const studentId = document.getElementById('studentId').value;
+    const sessionDate = document.getElementById('sessionDate').value;
+    const startTime = document.getElementById('startTime').value;
+    const endTime = document.getElementById('endTime').value;
+    const notes = document.getElementById('sessionNotes').value;
+    
+    if (!studentId || !sessionDate || !startTime || !endTime) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('access_token');
+        const startDateTime = new Date(`${sessionDate}T${startTime}`).toISOString();
+        const endDateTime = new Date(`${sessionDate}T${endTime}`).toISOString();
+        
+        const response = await fetch('/api/sessions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                student_id: parseInt(studentId),
+                tutor_id: currentTutorId,
+                start_time: startDateTime,
+                end_time: endDateTime,
+                notes: notes,
+                status: 'completed'
+            })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to record session');
+        }
+        
+        const result = await response.json();
+        alert('Session recorded successfully!');
+        
+        // Reset form and close modal
+        document.getElementById('recordSessionForm').reset();
+        closeRecordSessionModal();
+        
+    } catch (error) {
+        console.error('Error recording session:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+// Store tutor ID when loading
+async function setupTutorId() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch('/api/auth/me', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        currentTutorId = data.user.id;
+    } catch (error) {
+        console.error('Error getting tutor ID:', error);
+    }
+}
+
+// Initialize tutor ID on page load
+document.addEventListener('DOMContentLoaded', setupTutorId);
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const createCourseModal = document.getElementById('createCourseModal');
+    const recordSessionModal = document.getElementById('recordSessionModal');
+    
+    if (event.target === createCourseModal) {
+        closeCreateCourseModal();
+    }
+    if (event.target === recordSessionModal) {
+        closeRecordSessionModal();
+    }
+}
 </script>
+
+<!-- Create Course Modal -->
+<div id="createCourseModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-book-plus"></i> Create New Course</h2>
+            <span class="close" onclick="closeCreateCourseModal()">&times;</span>
+        </div>
+        <form id="createCourseForm" onsubmit="event.preventDefault(); createCourse();">
+            <div class="form-group">
+                <label for="courseTitle">Course Title *</label>
+                <input type="text" id="courseTitle" placeholder="e.g., Advanced Mathematics" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="courseDescription">Description *</label>
+                <textarea id="courseDescription" placeholder="Describe what students will learn" rows="4" required></textarea>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="courseSubject">Subject *</label>
+                    <select id="courseSubject" required>
+                        <option value="">Select a subject</option>
+                        <option value="mathematics">Mathematics</option>
+                        <option value="science">Science</option>
+                        <option value="english">English</option>
+                        <option value="history">History</option>
+                        <option value="languages">Languages</option>
+                        <option value="programming">Programming</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="courseLevel">Level *</label>
+                    <select id="courseLevel" required>
+                        <option value="">Select a level</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeCreateCourseModal()">Cancel</button>
+                <button type="submit" class="btn-submit">Create Course</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Record Session Modal -->
+<div id="recordSessionModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-video"></i> Record Live Session</h2>
+            <span class="close" onclick="closeRecordSessionModal()">&times;</span>
+        </div>
+        <form id="recordSessionForm" onsubmit="event.preventDefault(); recordSession();">
+            <div class="form-group">
+                <label for="studentId">Student ID (Who attended this session) *</label>
+                <input type="number" id="studentId" placeholder="e.g., 12345" required>
+                <small style="color: #666; display: block; margin-top: 5px;">Enter the ID of the student you had the session with</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="sessionDate">Session Date *</label>
+                <input type="date" id="sessionDate" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startTime">Start Time *</label>
+                    <input type="time" id="startTime" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="endTime">End Time *</label>
+                    <input type="time" id="endTime" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="sessionNotes">Session Notes</label>
+                <textarea id="sessionNotes" placeholder="Add notes about the session (optional)" rows="4"></textarea>
+            </div>
+            
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeRecordSessionModal()">Cancel</button>
+                <button type="submit" class="btn-submit">Record Session</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .modal-content {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px;
+        border-bottom: 1px solid #f0f0f0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px 15px 0 0;
+    }
+    
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .close {
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .close:hover,
+    .close:focus {
+        transform: scale(1.2);
+    }
+    
+    .modal-content form {
+        padding: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .modal-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .btn-cancel,
+    .btn-submit {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 120px;
+    }
+    
+    .btn-cancel {
+        background-color: #f0f0f0;
+        color: #333;
+    }
+    
+    .btn-cancel:hover {
+        background-color: #e0e0e0;
+        transform: translateY(-2px);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    @media (max-width: 600px) {
+        .modal-content {
+            width: 95%;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .modal-header {
+            padding: 20px;
+        }
+        
+        .modal-content form {
+            padding: 20px;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
 {% endblock %}
