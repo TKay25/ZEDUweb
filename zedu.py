@@ -41,15 +41,15 @@ def create_app(config_name='development'):
     })
     
     # Register blueprints (import here to avoid circular imports)
-    from routes.auth import auth_bp
-    from routes.users import users_bp
-    from routes.students import students_bp
-    from routes.tutors import tutors_bp
-    from routes.courses import courses_bp
-    from routes.sessions import sessions_bp
-    from routes.assessments import assessments_bp
-    from routes.messages import messages_bp
-    from routes.ai import ai_bp
+    from auth import auth_bp
+    from users import users_bp
+    from students import students_bp
+    from tutors import tutors_bp
+    from courses import courses_bp
+    from sessions import sessions_bp
+    from assessments import assessments_bp
+    from messages import messages_bp
+    from ai import ai_bp
     
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(users_bp, url_prefix="/api/users")
