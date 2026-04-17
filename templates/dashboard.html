@@ -738,6 +738,54 @@ function closeCreateCourseModal() {
     if (modal) modal.style.display = 'none';
 }
 
+async function ensureTutorProfile() {
+    try {
+        const token = localStorage.getItem('access_token');
+        
+        // Check if tutor profile exists
+        const checkResponse = await fetch(`/api/tutors/${currentTutorId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (checkResponse.ok) {
+            return true; // Profile exists
+        }
+        
+        // Profile missing - auto-create with defaults
+        // (This shouldn't happen if registration worked correctly)
+        console.log('Creating missing tutor profile...');
+        const createResponse = await fetch('/api/tutors', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: currentTutorId,
+                specializations: [],
+                experience_years: 0,
+                hourly_rate: 0
+            })
+        });
+        
+        if (!createResponse.ok) {
+            const error = await createResponse.json();
+            throw new Error(error.message || 'Failed to create tutor profile');
+        }
+        
+        console.log('Tutor profile auto-created (profile was missing)');
+        return true;
+        
+    } catch (error) {
+        console.error('Error with tutor profile:', error);
+        throw error;
+    }
+}
+
 async function createCourse() {
     const title = document.getElementById('courseTitle').value;
     const description = document.getElementById('courseDescription').value;
@@ -750,6 +798,9 @@ async function createCourse() {
     }
     
     try {
+        // Ensure tutor profile exists
+        await ensureTutorProfile();
+        
         const token = localStorage.getItem('access_token');
         const response = await fetch('/api/courses', {
             method: 'POST',
@@ -883,6 +934,7 @@ window.onclick = function(event) {
 
 <!-- Create Course Modal -->
 <div id="createCourseModal" class="modal" style="display: none;">
+
     <div class="modal-content">
         <div class="modal-header">
             <h2><i class="fas fa-book-plus"></i> Create New Course</h2>
