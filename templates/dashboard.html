@@ -752,12 +752,12 @@ async function ensureTutorProfile() {
         });
         
         if (checkResponse.ok) {
+            console.log('✓ Tutor profile exists');
             return true; // Profile exists
         }
         
         // Profile missing - auto-create with defaults
-        // (This shouldn't happen if registration worked correctly)
-        console.log('Creating missing tutor profile...');
+        console.log('⚠ Profile missing. Creating tutor profile...');
         const createResponse = await fetch('/api/tutors', {
             method: 'POST',
             headers: {
@@ -772,16 +772,18 @@ async function ensureTutorProfile() {
             })
         });
         
+        const createData = await createResponse.json();
+        console.log('Create response:', createResponse.status, createData);
+        
         if (!createResponse.ok) {
-            const error = await createResponse.json();
-            throw new Error(error.message || 'Failed to create tutor profile');
+            throw new Error(createData.message || `Failed to create tutor profile (${createResponse.status})`);
         }
         
-        console.log('Tutor profile auto-created (profile was missing)');
+        console.log('✓ Tutor profile created successfully');
         return true;
         
     } catch (error) {
-        console.error('Error with tutor profile:', error);
+        console.error('❌ Error with tutor profile:', error);
         throw error;
     }
 }
@@ -798,8 +800,17 @@ async function createCourse() {
     }
     
     try {
+        console.log('Step 1: Checking tutor profile for ID:', currentTutorId);
+        
         // Ensure tutor profile exists
-        await ensureTutorProfile();
+        const profileReady = await ensureTutorProfile();
+        
+        if (!profileReady) {
+            alert('Failed to ensure tutor profile. Please try again.');
+            return;
+        }
+        
+        console.log('Step 2: Tutor profile ready. Creating course...');
         
         const token = localStorage.getItem('access_token');
         const response = await fetch('/api/courses', {
@@ -817,12 +828,16 @@ async function createCourse() {
             })
         });
         
+        console.log('Step 3: Course creation response:', response.status);
+        
         if (!response.ok) {
             const error = await response.json();
+            console.error('API Error:', error);
             throw new Error(error.message || 'Failed to create course');
         }
         
         const result = await response.json();
+        console.log('Step 4: Course created successfully:', result);
         alert(`Course "${result.course.title}" created successfully!`);
         
         // Reset form and close modal
@@ -830,7 +845,7 @@ async function createCourse() {
         closeCreateCourseModal();
         
     } catch (error) {
-        console.error('Error creating course:', error);
+        console.error('❌ Error creating course:', error);
         alert(`Error: ${error.message}`);
     }
 }
